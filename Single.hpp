@@ -1,5 +1,5 @@
-#ifndef CANDIDATE_H
-#define CANDIDATE_H
+#ifndef SINGLE_H
+#define SINGLE_H
 
 #include "Cosmogenic/Event.hpp"
 #include "Cosmogenic/Point.hpp"
@@ -8,7 +8,7 @@
 namespace CosmogenicHunter{
 
   template <class T>
-  class Candidate : public Event<T>{
+  class Single : public Event<T>{
     
     Point<T> position;//RecoBAMA reconstructed positon
     T reconstructionGoodness;//RecoBAMA global fitting functional value
@@ -18,8 +18,8 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
     
   public:
-    Candidate() = default;
-    Candidate(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, ChargeInformation<T> chargeInformation);
+    Single() = default;
+    Single(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, ChargeInformation<T> chargeInformation);
     const Point<T>& getPosition() const;
     T getReconstructionGoodness() const;
     const ChargeInformation<T>& getChargeInformation() const;
@@ -29,41 +29,41 @@ namespace CosmogenicHunter{
   
   template <class T>
   template <class Archive>
-  void Candidate<T>::serialize(Archive& archive){
+  void Single<T>::serialize(Archive& archive){
     
     archive(cereal::base_class<Event<T>>(this), position, reconstructionGoodness, chargeInformation);
 
   }
   
   template <class T>
-  Candidate<T>::Candidate(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, ChargeInformation<T> chargeInformation)
+  Single<T>::Single(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, ChargeInformation<T> chargeInformation)
   :Event<T>(triggerTime, vetoCharge, visibleEnergy, identifier), position(std::move(position)),reconstructionGoodness(reconstructionGoodness),chargeInformation(std::move(chargeInformation)){
     
   }
 
   template <class T>
-  const Point<T>& Candidate<T>::getPosition() const{
+  const Point<T>& Single<T>::getPosition() const{
     
     return position;
 
   }
   
   template <class T>
-  T Candidate<T>::getReconstructionGoodness() const{
+  T Single<T>::getReconstructionGoodness() const{
     
     return reconstructionGoodness;
     
   }
   
   template <class T>
-  const ChargeInformation<T>& Candidate<T>::getChargeInformation() const{
+  const ChargeInformation<T>& Single<T>::getChargeInformation() const{
     
     return chargeInformation;
     
   }
   
   template <class T>
-  void Candidate<T>::print(std::ostream& output, unsigned outputOffset) const{
+  void Single<T>::print(std::ostream& output, unsigned outputOffset) const{
     
     Event<T>::print(output, outputOffset);//print the base class
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Position"<<": "<<position
@@ -74,9 +74,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  std::ostream& operator<<(std::ostream& output, const Candidate<T>& candidate){
+  std::ostream& operator<<(std::ostream& output, const Single<T>& single){
     
-    candidate.print(output, 0);
+    single.print(output, 0);
     return output;
     
   }
