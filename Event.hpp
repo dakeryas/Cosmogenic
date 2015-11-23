@@ -18,7 +18,7 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
 
   public:
-    Event() = default;
+    Event();
     Event(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier);
     Event(const Event<T>& other) = default;
     Event(Event&& other) = default;
@@ -40,6 +40,11 @@ namespace CosmogenicHunter{
     
     archive(triggerTime, vetoCharge, visibleEnergy, identifier);
 
+  }
+  
+  template<class T>
+  Event<T>::Event():triggerTime(0),vetoCharge(0),visibleEnergy(0),identifier(0){
+    
   }
 
   template<class T>

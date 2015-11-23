@@ -18,7 +18,7 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
     
   public:
-    Single() = default;
+    Single();
     Single(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, ChargeInformation<T> chargeInformation);
     const Point<T>& getPosition() const;
     T getReconstructionGoodness() const;
@@ -33,6 +33,11 @@ namespace CosmogenicHunter{
     
     archive(cereal::base_class<Event<T>>(this), position, reconstructionGoodness, chargeInformation);
 
+  }
+  
+  template <class T>
+  Single<T>::Single():reconstructionGoodness(0){
+    
   }
   
   template <class T>

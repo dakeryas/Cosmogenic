@@ -15,7 +15,7 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
     
   public:
-    ChargeInformation() = default;
+    ChargeInformation();
     ChargeInformation(T RMS, T difference, T ratio, T startTimeRMS);
     T getRMS() const;
     T getDifference() const;
@@ -35,6 +35,11 @@ namespace CosmogenicHunter{
     
     archive(RMS, difference, ratio, startTimeRMS);
 
+  }
+  
+  template <class T>
+  ChargeInformation<T>::ChargeInformation():RMS(0),difference(0),ratio(0),startTimeRMS(0){
+    
   }
   
   template <class T>

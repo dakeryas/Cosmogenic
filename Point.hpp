@@ -16,7 +16,7 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
     
   public:
-    Point() = default;
+    Point();
     Point(T x, T y, T z);
     Point(const Point<T>& other) = default;
     Point(Point<T>&& other) = default;
@@ -43,6 +43,11 @@ namespace CosmogenicHunter{
     
     archive(x, y, z);
 
+  }
+  
+  template <class T>
+  Point<T>::Point():x(0),y(0),z(0){
+    
   }
 
   template <class T>
