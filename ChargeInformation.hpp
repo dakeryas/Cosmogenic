@@ -1,5 +1,5 @@
-#ifndef CHARGE_DISTRIBUTION_H
-#define CHARGE_DISTRIBUTION_H
+#ifndef COSMOGENIC_CHARGE_INFORMATION_H
+#define COSMOGENIC_CHARGE_INFORMATION_H
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
@@ -25,6 +25,7 @@ namespace CosmogenicHunter{
     void setDifference(T difference);
     void setRatio(T ratio);
     void setStartTimeRMS(T startTimeRMS);
+    bool isLightNoise(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -101,6 +102,13 @@ namespace CosmogenicHunter{
 
     this->startTimeRMS = startTimeRMS;
 
+  }
+  
+  template <class T>
+  bool ChargeInformation<T>::isLightNoise(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS) const{
+    
+    return (startTimeRMS < maxStartTimeRMS || (RMS < (maxRMS - slopeRMS * startTimeRMS))) && difference < maxDifference && ratio < maxRatio;
+    
   }
   
   template <class T>

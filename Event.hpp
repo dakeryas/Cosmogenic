@@ -1,5 +1,5 @@
-#ifndef EVENT_H
-#define EVENT_H
+#ifndef COSMOGENIC_EVENT_H
+#define COSMOGENIC_EVENT_H
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
@@ -29,6 +29,7 @@ namespace CosmogenicHunter{
     T getVetoCharge() const;
     T getVisibleEnergy() const;
     unsigned getIdentifier() const;//identifier of the event within the corresponding run
+    bool triggersInnerVeto(T maxInnerVetoCharge) const;
     virtual void print(std::ostream& output, unsigned outputOffset) const;//needed to act as if 'operator<<' was virtual
     bool isEqualTo(const Event<T>& other) const;//checks identifiers only
     
@@ -77,6 +78,13 @@ namespace CosmogenicHunter{
   unsigned Event<T>::getIdentifier() const{
     
     return identifier;
+
+  }
+  
+  template<class T>
+  bool Event<T>::triggersInnerVeto(T maxInnerVetoCharge) const{
+    
+    return vetoCharge > maxInnerVetoCharge;
 
   }
   

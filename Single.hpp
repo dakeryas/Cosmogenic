@@ -1,5 +1,5 @@
-#ifndef SINGLE_H
-#define SINGLE_H
+#ifndef COSMOGENIC_SINGLE_H
+#define COSMOGENIC_SINGLE_H
 
 #include "Cosmogenic/Event.hpp"
 #include "Cosmogenic/Point.hpp"
@@ -23,6 +23,11 @@ namespace CosmogenicHunter{
     const Point<T>& getPosition() const;
     T getReconstructionGoodness() const;
     const ChargeInformation<T>& getChargeInformation() const;
+    double getTimeCorrelation(const Single<T>& other) const;
+    double getSpaceCorrelation(const Single<T>& other) const;
+    bool isTimeCorrelated(const Single<T>& other, double minTime, double maxTime) const;
+    bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
+    bool isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -68,6 +73,42 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
+  double Single<T>::getTimeCorrelation(const Single<T>& other) const{
+
+    return std::abs(this->getTriggerTime() - other.getTriggerTime());
+  
+  }
+
+  template <class T>
+  double Single<T>::getSpaceCorrelation(const Single<T>& other) const{
+
+    return getDistanceBetween(position, other.position);
+  
+  }
+  
+  template <class T>
+  bool Single<T>::isTimeCorrelated(const Single<T>& other, double minTime, double maxTime) const{
+    
+    auto timeCorrelation = getTimeCorrelation(other);
+    return timeCorrelation > minTime && timeCorrelation < maxTime;
+
+  }
+
+  template <class T>
+  bool Single<T>::isSpaceCorrelated(const Single<T>& other, double maxDistance) const{
+
+    return getSpaceCorrelation(other) < maxDistance;
+  
+  }
+  
+  template <class T>
+  bool Single<T>::isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const{
+    
+    return chargeInformation.isLightNoise(maxChargeRMS, slopeRMS, maxChargeDiff, maxChargeRatio, maxStartTimeRMS);
+    
+  }
+  
+  template <class T>
   void Single<T>::print(std::ostream& output, unsigned outputOffset) const{
     
     Event<T>::print(output, outputOffset);//print the base class
@@ -84,6 +125,34 @@ namespace CosmogenicHunter{
     single.print(output, 0);
     return output;
     
+  }
+  
+  template <class T>
+  double getTimeCorrelation(const Single<T>& single1, const Single<T>& single2){
+
+    return single1.getTimeCorrelation(single2);
+  
+  }
+
+  template <class T>
+  double getSpaceCorrelation(const Single<T>& single1, const Single<T>& single2){
+
+    return single1.getSpaceCorrelation(single2);
+  
+  }
+  
+  template <class T>
+  bool areTimeCorrelated(const Single<T>& single1, const Single<T>& single2, double minTime, double maxTime){
+
+    return single1.isTimeCorrelated(single2, minTime, maxTime);
+  
+  }
+
+  template <class T>
+  bool areSpaceCorrelated(const Single<T>& single1, const Single<T>& single2, double maxDistance){
+
+    return single1.isSpaceCorrelated(single2, maxDistance);
+  
   }
 
 }
