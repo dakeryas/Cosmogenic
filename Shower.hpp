@@ -1,5 +1,5 @@
-#ifndef SHOWER_H
-#define SHOWER_H
+#ifndef COSMOGENIC_SHOWER_H
+#define COSMOGENIC_SHOWER_H
 
 #include "Cosmogenic/Window.hpp"
 

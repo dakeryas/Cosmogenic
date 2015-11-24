@@ -1,5 +1,5 @@
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef COSMOGENIC_WINDOW_H
+#define COSMOGENIC_WINDOW_H
 
 #include <iomanip>
 #include <queue>

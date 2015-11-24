@@ -1,5 +1,5 @@
-#ifndef MUON_H
-#define MUON_H
+#ifndef COSMOGENIC_MUON_H
+#define COSMOGENIC_MUON_H
 
 #include "Cosmogenic/Event.hpp"
 #include "Cosmogenic/Segment.hpp"

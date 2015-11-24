@@ -1,5 +1,5 @@
-#ifndef POINT_H
-#define POINT_H
+#ifndef COSMOGENIC_POINT_H
+#define COSMOGENIC_POINT_H
 
 #include <iomanip>
 #include <cmath>

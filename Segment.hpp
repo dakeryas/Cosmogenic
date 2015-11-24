@@ -1,5 +1,5 @@
-#ifndef SEGMENT_H
-#define SEGMENT_H
+#ifndef COSMOGENIC_SEGMENT_H
+#define COSMOGENIC_SEGMENT_H
 
 #include "Cosmogenic/Point.hpp"
 
