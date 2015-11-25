@@ -19,7 +19,7 @@ namespace CosmogenicHunter{
   public:
     CandidateTree() = default;
     CandidateTree(CandidatePair<T> candidatePair, Window<Shower<Muon<K>, Single<T>>> muonShowers);
-    const Single<T>& getCandidatePair() const;
+    const CandidatePair<T>& getCandidatePair() const;
     const Window<Shower<Muon<K>, Single<T>>>& getMuonShowers() const;
     
   };
@@ -39,7 +39,7 @@ namespace CosmogenicHunter{
   }
 
   template <class T, class K>
-  const Single<T>& CandidateTree<T,K>::getCandidatePair() const{
+  const CandidatePair<T>& CandidateTree<T,K>::getCandidatePair() const{
     
     return candidatePair;
 
