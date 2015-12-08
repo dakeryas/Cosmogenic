@@ -107,7 +107,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool ChargeInformation<T>::isLightNoise(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS) const{
     
-    return (startTimeRMS < maxStartTimeRMS || (RMS < (maxRMS - slopeRMS * startTimeRMS))) && difference < maxDifference && ratio < maxRatio;
+    return difference > maxDifference || ratio > maxRatio || (startTimeRMS > maxStartTimeRMS && (RMS > (maxRMS - slopeRMS * startTimeRMS)));
     
   }
   
