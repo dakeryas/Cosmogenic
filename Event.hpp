@@ -119,6 +119,13 @@ namespace CosmogenicHunter{
     return event1.isEqualTo(event2);
     
   }
+  
+  template<class T>
+  bool operator!=(const Event<T>& event1, const Event<T>& event2){
+
+    return !(event1 == event2);
+    
+  }
 
 }
 
