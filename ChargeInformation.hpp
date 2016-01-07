@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
+#include "Cosmogenic/LightNoiseCutParameters.hpp"
 
 namespace CosmogenicHunter{
 
@@ -25,7 +26,7 @@ namespace CosmogenicHunter{
     void setDifference(T difference);
     void setRatio(T ratio);
     void setStartTimeRMS(T startTimeRMS);
-    bool isLightNoise(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS) const;
+    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -44,7 +45,10 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  ChargeInformation<T>::ChargeInformation(T RMS, T difference, T ratio, T startTimeRMS):RMS(RMS),difference(difference),ratio(ratio),startTimeRMS(startTimeRMS){
+  ChargeInformation<T>::ChargeInformation(T RMS, T difference, T ratio, T startTimeRMS)
+  :RMS(RMS),difference(difference),ratio(ratio),startTimeRMS(startTimeRMS){
+    
+     if(RMS < 0 || difference  < 0 || ratio < 0 || ratio > 1 || startTimeRMS <  0) throw std::invalid_argument("Invalid charge information.");
     
   }
 
@@ -75,39 +79,43 @@ namespace CosmogenicHunter{
     return startTimeRMS;
 
   }
-
+  
   template <class T>
   void ChargeInformation<T>::setRMS(T RMS){
     
-    this->RMS = RMS;
+    if(RMS >= 0) this->RMS = RMS;
+    else throw std::invalid_argument(std::to_string(RMS)+" is not a valid light noise RMS charge.");
 
   }
-
+  
   template <class T>
   void ChargeInformation<T>::setDifference(T difference){
-
-    this->difference = difference;
+    
+    if(difference >= 0) this->difference = difference;
+    else throw std::invalid_argument(std::to_string(difference)+" is not a valid light noise charge difference.");
 
   }
   
   template <class T>
   void ChargeInformation<T>::setRatio(T ratio){
 
-    this->ratio = ratio;
+    if(ratio >= 0 && ratio <= 1) this->ratio = ratio;
+    else throw std::invalid_argument(std::to_string(ratio)+" is not a valid light noise charge ratio.");
 
   }
   
   template <class T>
   void ChargeInformation<T>::setStartTimeRMS(T startTimeRMS){
 
-    this->startTimeRMS = startTimeRMS;
+    if(startTimeRMS > 0) this->startTimeRMS = startTimeRMS;
+    else throw std::invalid_argument(std::to_string(startTimeRMS)+"ns is not a valid light noise RMS start time.");
 
   }
   
   template <class T>
-  bool ChargeInformation<T>::isLightNoise(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS) const{
+    bool ChargeInformation<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
     
-    return difference > maxDifference || ratio > maxRatio || (startTimeRMS > maxStartTimeRMS && (RMS > (maxRMS - slopeRMS * startTimeRMS)));
+    return lightNoiseCutParameters.accept(*this);
     
   }
   

@@ -4,6 +4,7 @@
 #include "Cosmogenic/Event.hpp"
 #include "Cosmogenic/Point.hpp"
 #include "Cosmogenic/ChargeInformation.hpp"
+#include "Cosmogenic/Bounds.hpp"
 
 namespace CosmogenicHunter{
 
@@ -25,9 +26,9 @@ namespace CosmogenicHunter{
     const ChargeInformation<T>& getChargeInformation() const;
     double getTimeCorrelation(const Single<T>& other) const;
     double getSpaceCorrelation(const Single<T>& other) const;
-    bool isTimeCorrelated(const Single<T>& other, double minTime, double maxTime) const;
+    bool isTimeCorrelated(const Single<T>& other, const Bounds<double>& timeBounds) const;
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
-    bool isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const;
+    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -87,10 +88,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool Single<T>::isTimeCorrelated(const Single<T>& other, double minTime, double maxTime) const{
+  bool Single<T>::isTimeCorrelated(const Single<T>& other, const Bounds<double>& timeBounds) const{
     
-    auto timeCorrelation = getTimeCorrelation(other);
-    return timeCorrelation > minTime && timeCorrelation < maxTime;
+    return timeBounds.contains(getTimeCorrelation(other));
 
   }
 
@@ -102,9 +102,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool Single<T>::isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const{
+  bool Single<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
     
-    return chargeInformation.isLightNoise(maxChargeRMS, slopeRMS, maxChargeDiff, maxChargeRatio, maxStartTimeRMS);
+    return chargeInformation.isLightNoise(lightNoiseCutParameters);
     
   }
   
@@ -142,9 +142,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool areTimeCorrelated(const Single<T>& single1, const Single<T>& single2, double minTime, double maxTime){
+  bool areTimeCorrelated(const Single<T>& single1, const Single<T>& single2, const Bounds<double>& timeBounds){
 
-    return single1.isTimeCorrelated(single2, minTime, maxTime);
+    return single1.isTimeCorrelated(single2, timeBounds);
   
   }
 
