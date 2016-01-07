@@ -3,7 +3,6 @@
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
-#include "Cosmogenic/LightNoiseCutParameters.hpp"
 
 namespace CosmogenicHunter{
 
@@ -26,7 +25,6 @@ namespace CosmogenicHunter{
     void setDifference(T difference);
     void setRatio(T ratio);
     void setStartTimeRMS(T startTimeRMS);
-    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -110,13 +108,6 @@ namespace CosmogenicHunter{
     if(startTimeRMS > 0) this->startTimeRMS = startTimeRMS;
     else throw std::invalid_argument(std::to_string(startTimeRMS)+"ns is not a valid light noise RMS start time.");
 
-  }
-  
-  template <class T>
-    bool ChargeInformation<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
-    
-    return lightNoiseCutParameters.accept(*this);
-    
   }
   
   template <class T>

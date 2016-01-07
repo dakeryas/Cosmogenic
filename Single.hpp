@@ -8,6 +8,9 @@
 namespace CosmogenicHunter{
 
   template <class T>
+  class LightNoiseCutParameters;
+  
+  template <class T>
   class Single : public Event<T>{
     
     Point<T> position;//RecoBAMA reconstructed positon
@@ -87,7 +90,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool Single<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
     
-    return chargeInformation.isLightNoise(lightNoiseCutParameters);
+    return lightNoiseCutParameters.accept(chargeInformation);
     
   }
   
