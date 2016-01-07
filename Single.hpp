@@ -4,7 +4,6 @@
 #include "Cosmogenic/Event.hpp"
 #include "Cosmogenic/Point.hpp"
 #include "Cosmogenic/ChargeInformation.hpp"
-#include "Cosmogenic/Bounds.hpp"
 
 namespace CosmogenicHunter{
 
@@ -24,9 +23,7 @@ namespace CosmogenicHunter{
     const Point<T>& getPosition() const;
     T getReconstructionGoodness() const;
     const ChargeInformation<T>& getChargeInformation() const;
-    double getTimeCorrelation(const Single<T>& other) const;
     double getSpaceCorrelation(const Single<T>& other) const;
-    bool isTimeCorrelated(const Single<T>& other, const Bounds<double>& timeBounds) const;
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     void print(std::ostream& output, unsigned outputOffset) const;
@@ -72,26 +69,12 @@ namespace CosmogenicHunter{
     return chargeInformation;
     
   }
-  
-  template <class T>
-  double Single<T>::getTimeCorrelation(const Single<T>& other) const{
-
-    return std::abs(this->getTriggerTime() - other.getTriggerTime());
-  
-  }
 
   template <class T>
   double Single<T>::getSpaceCorrelation(const Single<T>& other) const{
 
     return getDistanceBetween(position, other.position);
   
-  }
-  
-  template <class T>
-  bool Single<T>::isTimeCorrelated(const Single<T>& other, const Bounds<double>& timeBounds) const{
-    
-    return timeBounds.contains(getTimeCorrelation(other));
-
   }
 
   template <class T>
@@ -126,25 +109,11 @@ namespace CosmogenicHunter{
     return output;
     
   }
-  
-  template <class T>
-  double getTimeCorrelation(const Single<T>& single1, const Single<T>& single2){
-
-    return single1.getTimeCorrelation(single2);
-  
-  }
 
   template <class T>
   double getSpaceCorrelation(const Single<T>& single1, const Single<T>& single2){
 
     return single1.getSpaceCorrelation(single2);
-  
-  }
-  
-  template <class T>
-  bool areTimeCorrelated(const Single<T>& single1, const Single<T>& single2, const Bounds<double>& timeBounds){
-
-    return single1.isTimeCorrelated(single2, timeBounds);
   
   }
 

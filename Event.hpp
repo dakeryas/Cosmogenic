@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
+#include "Cosmogenic/Bounds.hpp"
 
 namespace CosmogenicHunter{
 
@@ -29,6 +30,8 @@ namespace CosmogenicHunter{
     T getVetoCharge() const;
     T getVisibleEnergy() const;
     unsigned getIdentifier() const;//identifier of the event within the corresponding run
+    double getTimeCorrelation(const Event<T>& other) const;
+    bool isTimeCorrelated(const Event<T>& other, const Bounds<double>& timeBounds) const;
     bool triggersInnerVeto(T maxInnerVetoCharge) const;
     virtual void print(std::ostream& output, unsigned outputOffset) const;//needed to act as if 'operator<<' was virtual
     bool isEqualTo(const Event<T>& other) const;//checks identifiers only
@@ -80,6 +83,21 @@ namespace CosmogenicHunter{
     return identifier;
 
   }
+    
+  template <class T>
+  double Event<T>::getTimeCorrelation(const Event<T>& other) const{
+
+    return std::abs(this->triggerTime - other.triggerTime);
+  
+  }
+  
+    
+  template <class T>
+  bool Event<T>::isTimeCorrelated(const Event<T>& other, const Bounds<double>& timeBounds) const{
+    
+    return timeBounds.contains(getTimeCorrelation(other));
+
+  }
   
   template<class T>
   bool Event<T>::triggersInnerVeto(T maxInnerVetoCharge) const{
@@ -125,6 +143,20 @@ namespace CosmogenicHunter{
 
     return !(event1 == event2);
     
+  }
+    
+  template <class T>
+  double getTimeCorrelation(const Event<T>& single1, const Event<T>& single2){
+
+    return single1.getTimeCorrelation(single2);
+  
+  }
+    
+  template <class T>
+  bool areTimeCorrelated(const Event<T>& single1, const Event<T>& single2, const Bounds<double>& timeBounds){
+
+    return single1.isTimeCorrelated(single2, timeBounds);
+  
   }
 
 }
