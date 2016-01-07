@@ -33,6 +33,7 @@ namespace CosmogenicHunter{
     double getTimeCorrelation(const Event<T>& other) const;
     bool isTimeCorrelated(const Event<T>& other, const Bounds<double>& timeBounds) const;
     bool triggersInnerVeto(T maxInnerVetoCharge) const;
+    bool hasVisibleEnergyWithin(const Bounds<T>& energyBounds) const;
     virtual void print(std::ostream& output, unsigned outputOffset) const;//needed to act as if 'operator<<' was virtual
     bool isEqualTo(const Event<T>& other) const;//checks identifiers only
     
@@ -103,6 +104,13 @@ namespace CosmogenicHunter{
   bool Event<T>::triggersInnerVeto(T maxInnerVetoCharge) const{
     
     return vetoCharge > maxInnerVetoCharge;
+
+  }
+  
+  template<class T>
+  bool Event<T>::hasVisibleEnergyWithin(const Bounds<T>& energyBounds) const{
+    
+    return energyBounds.contains(visibleEnergy);
 
   }
   
