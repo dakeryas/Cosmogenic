@@ -25,7 +25,7 @@ namespace CosmogenicHunter{
     bool isSpaceCorrelated(double maxDistance) const;
     bool isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const;
     bool isStoppingMuon(T scale, T slope) const;
-    bool triggersInnerVeto(T maxInnerVetoCharge) const;
+    bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     
   };
   
@@ -100,9 +100,9 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool CandidatePair<T>::triggersInnerVeto(T maxInnerVetoCharge) const{
+  bool CandidatePair<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
   
-    return prompt.triggersInnerVeto(maxInnerVetoCharge) && delayed.triggersInnerVeto(maxInnerVetoCharge);
+    return prompt.isVetoed(innerVetoThreshold) && delayed.isVetoed(innerVetoThreshold);
 
   }
 

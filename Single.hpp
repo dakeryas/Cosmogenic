@@ -12,6 +12,9 @@ namespace CosmogenicHunter{
   class LightNoiseCutParameters;
   
   template <class T>
+  class InnerVetoThreshold;
+  
+  template <class T>
   class Single : public Event<T>{
     
     Point<T> position;//RecoBAMA reconstructed positon
@@ -32,6 +35,7 @@ namespace CosmogenicHunter{
     double getSpaceCorrelation(const Single<T>& other) const;
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
+    bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -100,7 +104,14 @@ namespace CosmogenicHunter{
   template <class T>
   bool Single<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
     
-    return lightNoiseCutParameters.accept(chargeInformation);
+    return lightNoiseCutParameters.tag(chargeInformation);
+    
+  }
+  
+  template <class T>
+  bool Single<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
+    
+    return innerVetoThreshold.tag(innerVetoInformation);
     
   }
   
