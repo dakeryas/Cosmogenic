@@ -18,9 +18,9 @@ namespace CosmogenicHunter{
   public:
     InnerVetoInformation();
     InnerVetoInformation(T charge, unsigned short numberOfHitPMTs);
-    T getVetoCharge() const;
+    T getCharge() const;
     unsigned short getNumberOfHitPMTs() const;
-    void setVetoCharge(T charge);
+    void setCharge(T charge);
     void setNumberOfHitPMTs(unsigned short numberOfHitPMTs);
     void print(std::ostream& output, unsigned outputOffset) const;
     
@@ -48,7 +48,7 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  T InnerVetoInformation<T>::getVetoCharge() const{
+  T InnerVetoInformation<T>::getCharge() const{
     
     return charge;
 
@@ -62,7 +62,7 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void InnerVetoInformation<T>::setVetoCharge(T charge){
+  void InnerVetoInformation<T>::setCharge(T charge){
     
     if(charge >= 0) this->charge = charge;
     else throw std::invalid_argument(std::to_string(charge)+" is not a valid inner veto charge.");
