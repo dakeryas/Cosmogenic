@@ -33,8 +33,8 @@ namespace CosmogenicHunter{
     void setMaxRatio(T maxRatio);
     void setMaxStartTimeRMS(double maxStartTimeRMS);
     void setParameters(T maxRMS, T slopeRMS, T maxDifference, T maxRatio, double maxStartTimeRMS);
-    bool accept(const ChargeData<T>& chargeData) const;
-    bool accept(const ChargeInformation<T>& chargeInformation) const;
+    bool tag(const ChargeData<T>& chargeData) const;
+    bool tag(const ChargeInformation<T>& chargeInformation) const;
     
   };
 
@@ -133,14 +133,14 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool LightNoiseCutParameters<T>::accept(const ChargeData<T>& chargeData) const{
+  bool LightNoiseCutParameters<T>::tag(const ChargeData<T>& chargeData) const{
 
     return chargeData.difference > maxDifference || chargeData.ratio > maxRatio || (chargeData.startTimeRMS > maxStartTimeRMS && (chargeData.RMS > (maxRMS - slopeRMS * chargeData.startTimeRMS)));
 
   }
   
   template <class T>
-  bool LightNoiseCutParameters<T>::accept(const ChargeInformation<T>& chargeInformation) const{
+  bool LightNoiseCutParameters<T>::tag(const ChargeInformation<T>& chargeInformation) const{
 
     return chargeInformation.getDifference() > maxDifference || chargeInformation.getRatio() > maxRatio || (chargeInformation.getStartTimeRMS() > maxStartTimeRMS && (chargeInformation.getRMS() > (maxRMS - slopeRMS * chargeInformation.getStartTimeRMS())));
 
