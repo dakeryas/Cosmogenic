@@ -149,11 +149,11 @@ namespace CosmogenicHunter{
   template <class T>
   std::ostream& operator<<(std::ostream& output, const LightNoiseCutParameters<T>& lightNoiseCutParameters){
 
-    output<<std::setw(14)<<std::left<<"Max RMS"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxRMS()<<"\n"
-      <<std::setw(14)<<std::left<<"Slope RMS"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getSlopeRMS()<<"\n"
-      <<std::setw(14)<<std::left<<"Max Diff"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxDifference()<<"\n"
-      <<std::setw(14)<<std::left<<"Max Ratio"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxRatio()<<"\n"
-      <<std::setw(14)<<std::left<<"Max RMSTstart"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxStartTimeRMS();
+    output<<std::setw(13)<<std::left<<"Max RMS"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxRMS()<<"\n"
+      <<std::setw(13)<<std::left<<"Slope RMS"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getSlopeRMS()<<"\n"
+      <<std::setw(13)<<std::left<<"Max Diff"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxDifference()<<"\n"
+      <<std::setw(13)<<std::left<<"Max Ratio"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxRatio()<<"\n"
+      <<std::setw(13)<<std::left<<"Max RMSTstart"<<": "<<std::setw(6)<<std::right<<lightNoiseCutParameters.getMaxStartTimeRMS();
       
     return output;
 
