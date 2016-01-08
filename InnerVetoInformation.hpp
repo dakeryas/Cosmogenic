@@ -43,7 +43,7 @@ namespace CosmogenicHunter{
   InnerVetoInformation<T>::InnerVetoInformation(T charge, unsigned short numberOfHitPMTs)
   :charge(charge),numberOfHitPMTs(numberOfHitPMTs){
     
-     if(charge < 0) throw std::invalid_argument(std::to_string(charge)+" is not a valid inner veto charge.");
+     if(charge < 0) throw std::invalid_argument(std::to_string(charge)+"DUQ is not a valid inner veto charge.");
     
   }
 
@@ -65,7 +65,7 @@ namespace CosmogenicHunter{
   void InnerVetoInformation<T>::setCharge(T charge){
     
     if(charge >= 0) this->charge = charge;
-    else throw std::invalid_argument(std::to_string(charge)+" is not a valid inner veto charge.");
+    else throw std::invalid_argument(std::to_string(charge)+"DUQ is not a valid inner veto charge.");
 
   }
   
