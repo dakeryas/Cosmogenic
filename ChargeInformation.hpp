@@ -82,7 +82,7 @@ namespace CosmogenicHunter{
   void ChargeInformation<T>::setRMS(T RMS){
     
     if(RMS >= 0) this->RMS = RMS;
-    else throw std::invalid_argument(std::to_string(RMS)+" is not a valid light noise RMS charge.");
+    else throw std::invalid_argument(std::to_string(RMS)+"DUQ is not a valid light noise RMS charge.");
 
   }
   
@@ -90,7 +90,7 @@ namespace CosmogenicHunter{
   void ChargeInformation<T>::setDifference(T difference){
     
     if(difference >= 0) this->difference = difference;
-    else throw std::invalid_argument(std::to_string(difference)+" is not a valid light noise charge difference.");
+    else throw std::invalid_argument(std::to_string(difference)+"DUQ is not a valid light noise charge difference.");
 
   }
   

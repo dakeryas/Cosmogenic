@@ -85,7 +85,7 @@ namespace CosmogenicHunter{
   void LightNoiseCutParameters<T>::setMaxRMS(T maxRMS){
     
     if(maxRMS >= 0) this->maxRMS = maxRMS;
-    else throw std::invalid_argument(std::to_string(maxRMS)+" is not a valid light noise RMS charge.");
+    else throw std::invalid_argument(std::to_string(maxRMS)+"DUQ is not a valid light noise RMS charge.");
 
   }
   
@@ -93,7 +93,7 @@ namespace CosmogenicHunter{
   void LightNoiseCutParameters<T>::setSlopeRMS(T slopeRMS){
 
     if(slopeRMS >= 0) this->slopeRMS = slopeRMS;
-    else throw std::invalid_argument(std::to_string(slopeRMS)+" is not a valid light noise RMS charge slope.");
+    else throw std::invalid_argument(std::to_string(slopeRMS)+"DUQ/ns is not a valid light noise RMS charge slope.");
 
   }
   
@@ -101,7 +101,7 @@ namespace CosmogenicHunter{
   void LightNoiseCutParameters<T>::setMaxDifference(T maxDifference){
     
     if(maxDifference >= 0) this->maxDifference = maxDifference;
-    else throw std::invalid_argument(std::to_string(maxDifference)+" is not a valid light noise charge difference.");
+    else throw std::invalid_argument(std::to_string(maxDifference)+"DUQ is not a valid light noise charge difference.");
 
   }
   
