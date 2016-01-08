@@ -10,6 +10,7 @@ namespace CosmogenicHunter{
   class Muon : public Event<T>{
     
     Segment<T> track;
+    T vetoCharge;
     T detectorCharge;
     friend class cereal::access;
     template <class Archive>
@@ -17,9 +18,11 @@ namespace CosmogenicHunter{
     
   public:
     Muon() = default;
-    Muon(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Segment<T> track, T detectorCharge);
+    Muon(double triggerTime, T visibleEnergy, unsigned identifier, Segment<T> track, T vetoCharge, T detectorCharge);
     const Segment<T>& getTrack() const;
+    T getVetoCharge() const;
     T getDetectorCharge() const;
+    bool triggersInnerVeto(T maxInnerVetoCharge) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -28,13 +31,13 @@ namespace CosmogenicHunter{
   template <class Archive>
   void Muon<T>::serialize(Archive& archive){
     
-    archive(cereal::base_class<Event<T>>(this), track, detectorCharge);
+    archive(cereal::base_class<Event<T>>(this), track, vetoCharge, detectorCharge);
 
   }
   
   template <class T>
-  Muon<T>::Muon(double triggerTime, T vetoCharge, T visibleEnergy, unsigned identifier, Segment<T> track, T detectorCharge)
-  :Event<T>(triggerTime, vetoCharge, visibleEnergy, identifier), track(std::move(track)), detectorCharge(detectorCharge){
+  Muon<T>::Muon(double triggerTime, T visibleEnergy, unsigned identifier, Segment<T> track, T vetoCharge, T detectorCharge)
+  :Event<T>(triggerTime, visibleEnergy, identifier),track(std::move(track)),vetoCharge(vetoCharge),detectorCharge(detectorCharge){
     
   }
   
@@ -45,10 +48,24 @@ namespace CosmogenicHunter{
 
   }
   
+  template<class T>
+  T Muon<T>::getVetoCharge() const{
+    
+    return vetoCharge;
+
+  }
+  
   template <class T>
   T Muon<T>::getDetectorCharge() const{
     
     return detectorCharge;
+
+  }
+  
+  template<class T>
+  bool Muon<T>::triggersInnerVeto(T maxInnerVetoCharge) const{
+    
+    return vetoCharge > maxInnerVetoCharge;
 
   }
   
@@ -57,6 +74,7 @@ namespace CosmogenicHunter{
     
     Event<T>::print(output, outputOffset);//print the base class
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Track"<<": "<<track
+      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"IV charge"<<": "<<std::setw(6)<<std::left<<vetoCharge
       <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"ID Charge"<<": "<<std::setw(6)<<std::left<<detectorCharge;
 
   }
