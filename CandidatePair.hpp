@@ -95,7 +95,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool CandidatePair<T>::isStoppingMuon(T scale, T slope) const{
 
-    return delayed.getEnergy() < scale * std::exp(slope * delayed.getReconstructionGoodness());
+    return delayed.getVisibleEnergy() < scale * std::exp(slope * delayed.getReconstructionGoodness());
   
   }
 
