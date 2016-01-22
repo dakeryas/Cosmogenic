@@ -2,7 +2,7 @@
 #define COSMOGENIC_SINGLE_H
 
 #include "Cosmogenic/Event.hpp"
-#include "Cosmogenic/Point.hpp"
+#include "Cosmogenic/PositionInformation.hpp"
 #include "Cosmogenic/InnerVetoInformation.hpp"
 #include "Cosmogenic/ChargeInformation.hpp"
 
@@ -17,8 +17,7 @@ namespace CosmogenicHunter{
   template <class T>
   class Single : public Event<T>{
     
-    Point<T> position;//RecoBAMA reconstructed positon
-    T reconstructionGoodness;//RecoBAMA global fitting functional value
+    PositionInformation<T> positionInformation;//RecoBAMA reconstructed positon and functional value
     InnerVetoInformation<T> innerVetoInformation;//chargeIV, number of hit IV PMTs
     ChargeInformation<T> chargeInformation;//QRMS, QDiff, QRatio, startTimeRMS
     friend class cereal::access;
@@ -26,10 +25,9 @@ namespace CosmogenicHunter{
     void serialize(Archive& archive);
     
   public:
-    Single();
-    Single(double triggerTime, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation);
-    const Point<T>& getPosition() const;
-    T getReconstructionGoodness() const;
+    Single() = default;
+    Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation);
+    const PositionInformation<T>& getPositionInformation() const;
     const InnerVetoInformation<T>& getInnerVetoInformation() const;
     const ChargeInformation<T>& getChargeInformation() const;
     double getSpaceCorrelation(const Single<T>& other) const;
@@ -44,33 +42,21 @@ namespace CosmogenicHunter{
   template <class Archive>
   void Single<T>::serialize(Archive& archive){
     
-    archive(cereal::base_class<Event<T>>(this), position, reconstructionGoodness, innerVetoInformation, chargeInformation);
+    archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation);
 
   }
-  
-  template <class T>
-  Single<T>::Single():reconstructionGoodness(0){
-    
-  }
-  
-  template <class T>
-  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, Point<T> position, T reconstructionGoodness, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation)
-  :Event<T>(triggerTime, visibleEnergy, identifier),position(std::move(position)),reconstructionGoodness(reconstructionGoodness),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)){
-    
-  }
-  
-  template <class T>
-  const Point<T>& Single<T>::getPosition() const{
-    
-    return position;
 
+  template <class T>
+  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation)
+  :Event<T>(triggerTime, visibleEnergy, identifier),positionInformation(std::move(positionInformation)),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)){
+    
   }
   
   template <class T>
-  T Single<T>::getReconstructionGoodness() const{
+  const PositionInformation<T>& Single<T>::getPositionInformation() const{
     
-    return reconstructionGoodness;
-    
+    return positionInformation;
+
   }
 
   template <class T>
@@ -90,7 +76,7 @@ namespace CosmogenicHunter{
   template <class T>
   double Single<T>::getSpaceCorrelation(const Single<T>& other) const{
 
-    return getDistanceBetween(position, other.position);
+    return getDistanceBetween(positionInformation.getPosition(), other.positionInformation.getPosition());
   
   }
 
@@ -119,9 +105,9 @@ namespace CosmogenicHunter{
   void Single<T>::print(std::ostream& output, unsigned outputOffset) const{
     
     Event<T>::print(output, outputOffset);//print the base class
-    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Position"<<": "<<position
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Goodness"<<": "<<reconstructionGoodness
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Inner Veto"<<":\n";
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Position"<<":\n";
+    positionInformation.print(output, outputOffset + 3);
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Inner Veto"<<":\n";
     innerVetoInformation.print(output, outputOffset + 3);
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Charge"<<":\n";
     chargeInformation.print(output, outputOffset + 3);

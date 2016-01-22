@@ -67,7 +67,7 @@ namespace CosmogenicHunter{
   template <class T>
   double CandidatePair<T>::getSpaceCorrelation() const{
 
-    return getDistanceBetween(prompt.getPosition(), delayed.getPosition());
+    return getSpaceCorrelation(prompt, delayed);
   
   }
 
@@ -95,7 +95,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool CandidatePair<T>::isStoppingMuon(T scale, T slope) const{
 
-    return delayed.getVisibleEnergy() < scale * std::exp(slope * delayed.getReconstructionGoodness());
+    return delayed.getVisibleEnergy() < scale * std::exp(slope * delayed.getPositionInformation().getInconsistency());
   
   }
 
