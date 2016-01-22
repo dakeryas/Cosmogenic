@@ -23,21 +23,24 @@ namespace CosmogenicHunter{
     PositionInformation<T> positionInformation;//RecoBAMA reconstructed positon and functional value
     InnerVetoInformation<T> innerVetoInformation;//chargeIV, number of hit IV PMTs
     ChargeInformation<T> chargeInformation;//QRMS, QDiff, QRatio, startTimeRMS
+    T chimneyInconsistencyRatio;///ratio: minus log (pulse shape likelihood in the chimney) / minus log (pulse shape likelihood at reconstruction positon)
     friend class cereal::access;
     template <class Archive>
     void serialize(Archive& archive);
     
   public:
-    Single() = default;
-    Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation);
+    Single();
+    Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio);
     const PositionInformation<T>& getPositionInformation() const;
     const InnerVetoInformation<T>& getInnerVetoInformation() const;
     const ChargeInformation<T>& getChargeInformation() const;
+    T getChimneyInconsistencyRatio() const;
     T getDistanceTo(const Muon<T>& muon) const;//shortest distance to Muon's track
     T getSpaceCorrelation(const Single<T>& other) const;
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
+    bool isPoorlyReconstructed(T scale, T slope) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -49,10 +52,15 @@ namespace CosmogenicHunter{
     archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation);
 
   }
+  
+  template <class T>
+  Single<T>::Single():chimneyInconsistencyRatio(std::numeric_limits<T>::max()){
+    
+  }
 
   template <class T>
-  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation)
-  :Event<T>(triggerTime, visibleEnergy, identifier),positionInformation(std::move(positionInformation)),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)){
+  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio)
+  :Event<T>(triggerTime, visibleEnergy, identifier),positionInformation(std::move(positionInformation)),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)),chimneyInconsistencyRatio(chimneyInconsistencyRatio){
     
   }
   
@@ -74,6 +82,13 @@ namespace CosmogenicHunter{
   const ChargeInformation<T>& Single<T>::getChargeInformation() const{
     
     return chargeInformation;
+    
+  }
+  
+  template <class T>
+  T Single<T>::getChimneyInconsistencyRatio() const{
+    
+    return chimneyInconsistencyRatio;
     
   }
   
@@ -110,6 +125,13 @@ namespace CosmogenicHunter{
     
     return innerVetoThreshold.tag(innerVetoInformation);
     
+  }
+  
+  template <class T>
+  bool Single<T>::isPoorlyReconstructed(T scale, T slope) const{
+
+    return this->visibleEnergy < scale * std::exp(slope * positionInformation.getInconsistency());
+  
   }
   
   template <class T>
