@@ -23,8 +23,9 @@ namespace CosmogenicHunter{
     double getSpaceCorrelation() const;
     bool isTimeCorrelated(double minTime, double maxTime) const;
     bool isSpaceCorrelated(double maxDistance) const;
-    bool isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const;
-    bool isStoppingMuon(T scale, T slope) const;
+    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
+    bool isPoorlyReconstructed(T scale, T slope) const;
+    bool isStoppingMuon(T maxChimneyInconsistencyRatio) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     
   };
@@ -86,16 +87,23 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool CandidatePair<T>::isLightNoise(T maxChargeRMS, T slopeRMS, T maxChargeDiff, T maxChargeRatio, double maxStartTimeRMS) const{
+  bool CandidatePair<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
   
-    return prompt.isLightNoise(maxChargeRMS, slopeRMS, maxChargeDiff, maxChargeRatio, maxStartTimeRMS) && delayed.isLightNoise(maxChargeRMS, slopeRMS, maxChargeDiff, maxChargeRatio, maxStartTimeRMS);
+    return prompt.isLightNoise(lightNoiseCutParameters) || delayed.isLightNoise(lightNoiseCutParameters);
 
   }
 
   template <class T>
-  bool CandidatePair<T>::isStoppingMuon(T scale, T slope) const{
+  bool CandidatePair<T>::isPoorlyReconstructed(T scale, T slope) const{
 
-    return delayed.getVisibleEnergy() < scale * std::exp(slope * delayed.getPositionInformation().getInconsistency());
+    return delayed.isPoorlyReconstructed(scale, slope);
+  
+  }
+  
+  template <class T>
+  bool CandidatePair<T>::isStoppingMuon(T maxChimneyInconsistencyRatio) const{
+
+    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() > maxChimneyInconsistencyRatio;
   
   }
 
