@@ -9,6 +9,9 @@
 namespace CosmogenicHunter{
 
   template <class T>
+  class Muon;
+  
+  template <class T>
   class LightNoiseCutParameters;
   
   template <class T>
@@ -30,7 +33,8 @@ namespace CosmogenicHunter{
     const PositionInformation<T>& getPositionInformation() const;
     const InnerVetoInformation<T>& getInnerVetoInformation() const;
     const ChargeInformation<T>& getChargeInformation() const;
-    double getSpaceCorrelation(const Single<T>& other) const;
+    T getDistanceTo(const Muon<T>& muon) const;//shortest distance to Muon's track
+    T getSpaceCorrelation(const Single<T>& other) const;
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
@@ -72,11 +76,18 @@ namespace CosmogenicHunter{
     return chargeInformation;
     
   }
+  
+  template <class T>
+  T Single<T>::getDistanceTo(const Muon<T>& muon) const{
+
+    return getDistanceBetween(positionInformation.getPosition(), muon.getTrack());
+  
+  }
 
   template <class T>
-  double Single<T>::getSpaceCorrelation(const Single<T>& other) const{
+  T Single<T>::getSpaceCorrelation(const Single<T>& other) const{
 
-    return getDistanceBetween(positionInformation.getPosition(), other.positionInformation.getPosition());
+    return getDistanceBetween(positionInformation.getPosition(), other.getPositionInformation().getPosition());
   
   }
 
@@ -121,6 +132,21 @@ namespace CosmogenicHunter{
     return output;
     
   }
+  
+  template <class T>
+  T getDistanceBetween(const Single<T>& single, const Muon<T>& muon){
+    
+    return single.getDistanceTo(muon);
+    
+  }
+  
+  template <class T>
+  T getDistanceBetween(const Muon<T>& muon, const Single<T>& single){
+    
+    return getDistanceBetween(single, muon);
+    
+  }
+
 
   template <class T>
   double getSpaceCorrelation(const Single<T>& single1, const Single<T>& single2){
