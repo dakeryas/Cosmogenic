@@ -9,13 +9,15 @@ namespace CosmogenicHunter{
 
   template <class T>
   class Event{
-    
-    double triggerTime;
-    T visibleEnergy;
-    unsigned identifier;
+  
     friend class cereal::access;
     template <class Archive>
     void serialize(Archive& archive);
+    
+  protected:
+    double triggerTime;
+    T visibleEnergy;
+    unsigned identifier;
 
   public:
     Event();
