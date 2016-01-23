@@ -41,7 +41,7 @@ namespace CosmogenicHunter{
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     bool isPoorlyReconstructed(T scale, T slope) const;
-    void print(std::ostream& output, unsigned outputOffset) const;
+    void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;
     
   };
   
@@ -135,22 +135,24 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void Single<T>::print(std::ostream& output, unsigned outputOffset) const{
+  void Single<T>::print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const{
     
-    Event<T>::print(output, outputOffset);//print the base class
-    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Position"<<":\n";
+    Event<T>::print(output, firstColumnWidth, outputOffset);//print the base class
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Position"<<":\n";
     positionInformation.print(output, outputOffset + 3);
-    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Inner Veto"<<":\n";
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Inner Veto"<<":\n";
     innerVetoInformation.print(output, outputOffset + 3);
-    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Charge"<<":\n";
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Charge"<<":\n";
     chargeInformation.print(output, outputOffset + 3);
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Chimney Pulse"<<":\n"
+    <<std::setw(outputOffset + 3)<<std::left<<""<<"Inconsistency: "<<chimneyInconsistencyRatio;
 
   }
   
   template <class T>
   std::ostream& operator<<(std::ostream& output, const Single<T>& single){
     
-    single.print(output, 0);
+    single.print(output, 13, 0);
     return output;
     
   }

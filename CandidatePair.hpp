@@ -119,9 +119,9 @@ namespace CosmogenicHunter{
   std::ostream& operator<<(std::ostream& output, const CandidatePair<T>& candidatePair){
     
     output<<std::setw(6)<<std::left<<"Prompt"<<": \n";
-    candidatePair.getPrompt().print(output, 3);
+    candidatePair.getPrompt().print(output, 13, 3);
     output<<"\n"<<std::setw(6)<<std::left<<"Delayed"<<": \n";
-    candidatePair.getDelayed().print(output, 3);
+    candidatePair.getDelayed().print(output, 13, 3);
     return output;
     
   }

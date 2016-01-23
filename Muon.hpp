@@ -27,7 +27,7 @@ namespace CosmogenicHunter{
     T getDetectorCharge() const;
     T getDistanceTo(const Single<T>& single) const;//shortest distance between track and single's position
     bool triggersInnerVeto(T maxInnerVetoCharge) const;
-    void print(std::ostream& output, unsigned outputOffset) const;
+    void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;
     
   };
   
@@ -81,19 +81,19 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void Muon<T>::print(std::ostream& output, unsigned outputOffset) const{
+  void Muon<T>::print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const{
     
-    Event<T>::print(output, outputOffset);//print the base class
-    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Track"<<": "<<track
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"IV charge"<<": "<<std::setw(6)<<std::left<<vetoCharge
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"ID Charge"<<": "<<std::setw(6)<<std::left<<detectorCharge;
+    Event<T>::print(output, firstColumnWidth, outputOffset);//print the base class
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Track"<<": "<<track
+      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"IV charge"<<": "<<std::setw(6)<<std::left<<vetoCharge
+      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"ID Charge"<<": "<<std::setw(6)<<std::left<<detectorCharge;
 
   }
 
   template <class T>
   std::ostream& operator<<(std::ostream& output, const Muon<T>& muon){
     
-    muon.print(output, 0);
+    muon.print(output, 13, 0);
     return output;
     
   }

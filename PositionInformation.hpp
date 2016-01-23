@@ -78,7 +78,7 @@ namespace CosmogenicHunter{
   template <class T>
   void PositionInformation<T>::print(std::ostream& output, unsigned outputOffset) const{
     
-    output<<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Position"<<": "<<std::setw(7)<<std::left<<position<<"\n"
+    output<<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Position"<<": "<<std::left<<position<<"\n"
       <<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Inconsistency"<<": "<<std::setw(4)<<std::left<<inconsistency;
 
   }

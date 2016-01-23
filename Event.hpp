@@ -33,7 +33,7 @@ namespace CosmogenicHunter{
     double getTimeCorrelation(const Event<T>& other) const;
     bool isTimeCorrelated(const Event<T>& other, const Bounds<double>& timeBounds) const;
     bool hasVisibleEnergyWithin(const Bounds<T>& energyBounds) const;
-    virtual void print(std::ostream& output, unsigned outputOffset) const;//needed to act as if 'operator<<' was virtual
+    virtual void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;//needed to act as if 'operator<<' was virtual
     bool isEqualTo(const Event<T>& other) const;//checks identifiers only
     
   };
@@ -100,11 +100,11 @@ namespace CosmogenicHunter{
   }
   
   template<class T>
-  void Event<T>::print(std::ostream& output, unsigned outputOffset) const{
+  void Event<T>::print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const{
 
-    output<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Trigger time"<<": "<<std::setw(14)<<std::left<<triggerTime
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Energy"<<": "<<std::setw(3)<<std::left<<visibleEnergy
-      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(12)<<std::left<<"Identifier"<<": "<<std::setw(8)<<std::left<<identifier;
+    output<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Trigger time"<<": "<<std::setw(14)<<std::left<<triggerTime
+      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Energy"<<": "<<std::setw(3)<<std::left<<visibleEnergy
+      <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Identifier"<<": "<<std::setw(8)<<std::left<<identifier;
     
   }
   
