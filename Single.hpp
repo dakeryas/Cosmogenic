@@ -49,7 +49,7 @@ namespace CosmogenicHunter{
   template <class Archive>
   void Single<T>::serialize(Archive& archive){
     
-    archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation);
+    archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation, chimneyInconsistencyRatio);
 
   }
   
