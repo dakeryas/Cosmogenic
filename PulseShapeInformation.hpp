@@ -46,7 +46,7 @@ namespace CosmogenicHunter{
     
     if(inconsistency < 0 || inconsistencyInChimney < 0 || (inconsistency == 0 && inconsistencyInChimney == 0) ){//both inconsistencies cannot be zero at the same time
       
-      auto errorMessage = std::to_string(inconsistency)+" and "+std::to_string(inconsistencyInChimney)+" are not a valid pulse shape inconsitencies.";
+      auto errorMessage = std::to_string(inconsistency)+" and "+std::to_string(inconsistencyInChimney)+" are not valid pulse shape inconsitencies.";
       throw std::invalid_argument(errorMessage);
       
     }
