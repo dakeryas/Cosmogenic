@@ -46,7 +46,12 @@ namespace CosmogenicHunter{
   ChargeInformation<T>::ChargeInformation(T RMS, T difference, T ratio, T startTimeRMS)
   :RMS(RMS),difference(difference),ratio(ratio),startTimeRMS(startTimeRMS){
     
-     if(RMS < 0 || difference  < 0 || ratio < 0 || ratio > 1 || startTimeRMS <  0) throw std::invalid_argument("Invalid charge information.");
+    if(RMS < 0 || difference  < 0 || ratio < 0 || ratio > 1 || startTimeRMS <  0){
+    
+      auto errorMessage = std::to_string(RMS)+"DUQ, "+std::to_string(difference)+"DUQ, "+std::to_string(ratio)+", "+std::to_string(startTimeRMS)+"ns are invalid charge information parameters";
+      throw std::invalid_argument(errorMessage);
+      
+    }
     
   }
 
