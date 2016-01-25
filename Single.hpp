@@ -18,6 +18,9 @@ namespace CosmogenicHunter{
   class InnerVetoThreshold;
   
   template <class T>
+  class ReconstructionCutParameters;
+  
+  template <class T>
   class Single : public Event<T>{
     
     PositionInformation<T> positionInformation;//RecoBAMA reconstructed positon and functional value
@@ -40,7 +43,7 @@ namespace CosmogenicHunter{
     bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
-    bool isPoorlyReconstructed(T scale, T slope) const;
+     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
     void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;
     
   };
@@ -128,9 +131,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool Single<T>::isPoorlyReconstructed(T scale, T slope) const{
+  bool Single<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
 
-    return this->visibleEnergy < scale * std::exp(slope * positionInformation.getInconsistency());
+    return reconstructionCutParameters.tag(*this);
   
   }
   

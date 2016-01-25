@@ -24,7 +24,7 @@ namespace CosmogenicHunter{
     bool isTimeCorrelated(double minTime, double maxTime) const;
     bool isSpaceCorrelated(double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
-    bool isPoorlyReconstructed(T scale, T slope) const;
+    bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
     bool isStoppingMuon(T maxChimneyInconsistencyRatio) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     
@@ -94,9 +94,9 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool CandidatePair<T>::isPoorlyReconstructed(T scale, T slope) const{
+  bool CandidatePair<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
 
-    return delayed.isPoorlyReconstructed(scale, slope);
+    return delayed.isPoorlyReconstructed(reconstructionCutParameters);
   
   }
   
