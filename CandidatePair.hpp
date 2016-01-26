@@ -25,7 +25,7 @@ namespace CosmogenicHunter{
     bool isSpaceCorrelated(double maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
-    bool isStoppingMuon(T maxChimneyInconsistencyRatio) const;
+    bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     
   };
@@ -101,9 +101,9 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool CandidatePair<T>::isStoppingMuon(T maxChimneyInconsistencyRatio) const{
+  bool CandidatePair<T>::isStoppingMuon(T minChimneyInconsistencyRatio) const{
 
-    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() > maxChimneyInconsistencyRatio;
+    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() > minChimneyInconsistencyRatio;
   
   }
 
