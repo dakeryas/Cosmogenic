@@ -7,6 +7,9 @@
 namespace CosmogenicHunter{
 
   template <class T>
+  class MuonDefinition;
+  
+  template <class T>
   class Single;
   
   template <class T>
@@ -25,6 +28,7 @@ namespace CosmogenicHunter{
     const Segment<T>& getTrack() const;
     T getVetoCharge() const;
     T getDetectorCharge() const;
+    T getVisibleEnergy(const MuonDefinition<T>& muonDefinition) const;
     T getDistanceTo(const Single<T>& single) const;//shortest distance between track and single's position
     bool triggersInnerVeto(T maxInnerVetoCharge) const;
     void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;
@@ -63,6 +67,13 @@ namespace CosmogenicHunter{
   T Muon<T>::getDetectorCharge() const{
     
     return detectorCharge;
+
+  }
+  
+  template <class T>
+  T Muon<T>::getVisibleEnergy(const MuonDefinition<T>& muonDefinition) const{
+    
+    muonDefinition.getVisibleEnergy(*this);
 
   }
   
