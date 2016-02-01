@@ -20,9 +20,9 @@ namespace CosmogenicHunter{
     const Single<T>& getPrompt() const;
     const Single<T>& getDelayed() const;
     double getTimeCorrelation() const;
-    double getSpaceCorrelation() const;
-    bool isTimeCorrelated(double minTime, double maxTime) const;
-    bool isSpaceCorrelated(double maxDistance) const;
+    T getSpaceCorrelation() const;
+    bool isTimeCorrelated(const Bounds<double>& timeBounds) const;
+    bool isSpaceCorrelated(T maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
     bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
@@ -66,21 +66,21 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  double CandidatePair<T>::getSpaceCorrelation() const{
+  T CandidatePair<T>::getSpaceCorrelation() const{
 
     return getSpaceCorrelation(prompt, delayed);
   
   }
 
   template <class T>
-  bool CandidatePair<T>::isTimeCorrelated(double minTime, double maxTime) const{
+  bool CandidatePair<T>::isTimeCorrelated(const Bounds<double>& timeBounds) const{
     
-    return areTimeCorrelated(prompt, delayed, minTime, maxTime);
+    return areTimeCorrelated(prompt, delayed, timeBounds);
 
   }
 
   template <class T>
-  bool CandidatePair<T>::isSpaceCorrelated(double maxDistance) const{
+  bool CandidatePair<T>::isSpaceCorrelated(T maxDistance) const{
 
     return areSpaceCorrelated(prompt, delayed, maxDistance);
   

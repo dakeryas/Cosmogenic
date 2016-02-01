@@ -40,7 +40,7 @@ namespace CosmogenicHunter{
     T getChimneyInconsistencyRatio() const;
     T getDistanceTo(const Muon<T>& muon) const;//shortest distance to Muon's track
     T getSpaceCorrelation(const Single<T>& other) const;
-    bool isSpaceCorrelated(const Single<T>& other, double maxDistance) const;
+    bool isSpaceCorrelated(const Single<T>& other, T maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
      bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
@@ -110,7 +110,7 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool Single<T>::isSpaceCorrelated(const Single<T>& other, double maxDistance) const{
+  bool Single<T>::isSpaceCorrelated(const Single<T>& other, T maxDistance) const{
 
     return getSpaceCorrelation(other) < maxDistance;
   
@@ -183,7 +183,7 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool areSpaceCorrelated(const Single<T>& single1, const Single<T>& single2, double maxDistance){
+  bool areSpaceCorrelated(const Single<T>& single1, const Single<T>& single2, T maxDistance){
 
     return single1.isSpaceCorrelated(single2, maxDistance);
   
