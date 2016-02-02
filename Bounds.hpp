@@ -20,6 +20,7 @@ namespace CosmogenicHunter{
     T getLowEdge() const;
     T getUpEdge() const;
     T getWidth() const;
+    bool hasNegativeEdge() const;
     void setEdges(const T& lowEdge, const T& upEdge);
     Bounds<T>& shift(const T& value);
     
@@ -70,6 +71,13 @@ namespace CosmogenicHunter{
   T Bounds<T>::getWidth() const{
     
   return upEdge - lowEdge;
+
+  }
+  
+  template <class T>
+  bool Bounds<T>::hasNegativeEdge() const{
+    
+    return lowEdge < 0;
 
   }
   
