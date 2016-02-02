@@ -28,7 +28,7 @@ namespace CosmogenicHunter{
   template <class T>
   Bounds<T>::Bounds(T lowEdge, T upEdge):lowEdge(lowEdge),upEdge(upEdge){
     
-    if(upEdge < lowEdge || lowEdge < 0 || upEdge  < 0){
+    if(upEdge < lowEdge){
       
       auto errorMessage = std::to_string(lowEdge)+" and "+std::to_string(upEdge)+" are not valid low and up bounds.";
       throw std::invalid_argument(errorMessage);
@@ -76,7 +76,7 @@ namespace CosmogenicHunter{
   template <class T>
   void Bounds<T>::setEdges(const T& lowEdge, const T& upEdge){
     
-    if(upEdge < lowEdge || lowEdge < 0 || upEdge  < 0){
+    if(upEdge < lowEdge){
       
       auto errorMessage = std::to_string(lowEdge)+" and "+std::to_string(upEdge)+" are not valid low and up bounds.";
       throw std::invalid_argument(errorMessage);
