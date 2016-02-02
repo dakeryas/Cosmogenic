@@ -103,14 +103,14 @@ namespace CosmogenicHunter{
   template <class T>
   bool CandidatePair<T>::isStoppingMuon(T minChimneyInconsistencyRatio) const{
 
-    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() > minChimneyInconsistencyRatio;
+    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() < minChimneyInconsistencyRatio;
   
   }
 
   template <class T>
   bool CandidatePair<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
   
-    return prompt.isVetoed(innerVetoThreshold) && delayed.isVetoed(innerVetoThreshold);
+    return prompt.isVetoed(innerVetoThreshold);
 
   }
 
