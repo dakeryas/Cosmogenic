@@ -36,7 +36,7 @@ namespace CosmogenicHunter{
   template <class Archive>
   void InnerVetoInformation<T>::serialize(Archive& archive){
     
-    archive(charge, numberOfHitPMTs);
+    archive(charge, numberOfHitPMTs, timeToInnerDetectorStart, distanceToInnerDetector);
 
   }
   
