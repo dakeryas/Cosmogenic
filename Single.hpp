@@ -44,7 +44,7 @@ namespace CosmogenicHunter{
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
      bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
-    void print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const;
+    void print(std::ostream& output, unsigned outputOffset) const;
     
   };
   
@@ -138,9 +138,10 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void Single<T>::print(std::ostream& output, unsigned firstColumnWidth, unsigned outputOffset) const{
+  void Single<T>::print(std::ostream& output, unsigned outputOffset) const{
     
-    Event<T>::print(output, firstColumnWidth, outputOffset);//print the base class
+    unsigned firstColumnWidth = 13;
+    Event<T>::print(output, outputOffset);//print the base class
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Position"<<":\n";
     positionInformation.print(output, outputOffset + 3);
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Inner Veto"<<":\n";
@@ -155,7 +156,7 @@ namespace CosmogenicHunter{
   template <class T>
   std::ostream& operator<<(std::ostream& output, const Single<T>& single){
     
-    single.print(output, 13, 0);
+    single.print(output, 0);
     return output;
     
   }
