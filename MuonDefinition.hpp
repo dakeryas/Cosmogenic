@@ -11,6 +11,9 @@ namespace CosmogenicHunter{
   struct Entry;
   
   template <class T>
+  class Muon;
+  
+  template <class T>
   class MuonDefinition{
     
     T IVChargeThreshold;//lower cut on the IV charge
