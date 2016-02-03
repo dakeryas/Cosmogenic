@@ -118,10 +118,11 @@ namespace CosmogenicHunter{
   template <class T>
   void InnerVetoInformation<T>::print(std::ostream& output, unsigned outputOffset) const{
     
-    output<<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Charge"<<": "<<std::setw(7)<<std::left<<charge<<"\n"
-      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Hit PMTs"<<": "<<std::setw(4)<<std::left<<numberOfHitPMTs<<"\n"
-      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Time to ID"<<": "<<std::setw(4)<<std::left<<timeToInnerDetectorStart<<"\n"
-      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(13)<<std::left<<"Distance to ID"<<": "<<std::setw(5)<<std::left<<distanceToInnerDetector;
+    unsigned firstColumnWidth = 14;
+    output<<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Charge"<<": "<<std::setw(7)<<std::left<<charge<<"\n"
+      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Hit PMTs"<<": "<<std::setw(4)<<std::left<<numberOfHitPMTs<<"\n"
+      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Time to ID"<<": "<<std::setw(4)<<std::left<<timeToInnerDetectorStart<<"\n"
+      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Distance to ID"<<": "<<std::setw(5)<<std::left<<distanceToInnerDetector;
 
   }
   
