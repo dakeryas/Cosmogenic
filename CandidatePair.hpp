@@ -26,6 +26,7 @@ namespace CosmogenicHunter{
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
     bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
+    bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     
   };
@@ -111,6 +112,13 @@ namespace CosmogenicHunter{
   bool CandidatePair<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
   
     return prompt.isVetoed(innerVetoThreshold);
+
+  }
+  
+  template <class T>
+  bool CandidatePair<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
+  
+    return prompt.isBufferMuon(bufferMuonCutParameters);
 
   }
 

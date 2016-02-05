@@ -21,6 +21,9 @@ namespace CosmogenicHunter{
   class ReconstructionCutParameters;
   
   template <class T>
+  class BufferMuonCutParameters;
+  
+  template <class T>
   class Single : public Event<T>{
     
     PositionInformation<T> positionInformation;//RecoBAMA reconstructed positon and functional value
@@ -43,7 +46,8 @@ namespace CosmogenicHunter{
     bool isSpaceCorrelated(const Single<T>& other, T maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
-     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
+    bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
+    bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -134,6 +138,13 @@ namespace CosmogenicHunter{
   bool Single<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
 
     return reconstructionCutParameters.tag(*this);
+  
+  }
+  
+  template <class T>
+  bool Single<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
+
+    return bufferMuonCutParameters.tag(*this);
   
   }
   
