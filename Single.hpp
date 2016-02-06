@@ -30,17 +30,19 @@ namespace CosmogenicHunter{
     InnerVetoInformation<T> innerVetoInformation;//chargeIV, number of hit IV PMTs
     ChargeInformation<T> chargeInformation;//QRMS, QDiff, QRatio, startTimeRMS
     T chimneyInconsistencyRatio;///ratio: minus log (pulse shape likelihood in the chimney) / minus log (pulse shape likelihood at reconstruction positon)
+    T cosmogenicLikelihood;
     friend class cereal::access;
     template <class Archive>
     void serialize(Archive& archive);
     
   public:
     Single();
-    Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio);
+    Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio, T cosmogenicLikelihood);
     const PositionInformation<T>& getPositionInformation() const;
     const InnerVetoInformation<T>& getInnerVetoInformation() const;
     const ChargeInformation<T>& getChargeInformation() const;
     T getChimneyInconsistencyRatio() const;
+    T getCosmogenicLikelihood() const;
     T getDistanceTo(const Muon<T>& muon) const;//shortest distance to Muon's track
     T getSpaceCorrelation(const Single<T>& other) const;
     bool isSpaceCorrelated(const Single<T>& other, T maxDistance) const;
@@ -56,7 +58,7 @@ namespace CosmogenicHunter{
   template <class Archive>
   void Single<T>::serialize(Archive& archive){
     
-    archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation, chimneyInconsistencyRatio);
+    archive(cereal::base_class<Event<T>>(this), positionInformation, innerVetoInformation, chargeInformation, chimneyInconsistencyRatio, cosmogenicLikelihood);
 
   }
   
@@ -66,8 +68,8 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio)
-  :Event<T>(triggerTime, visibleEnergy, identifier),positionInformation(std::move(positionInformation)),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)),chimneyInconsistencyRatio(chimneyInconsistencyRatio){
+  Single<T>::Single(double triggerTime, T visibleEnergy, unsigned identifier, PositionInformation<T> positionInformation, InnerVetoInformation<T> innerVetoInformation, ChargeInformation<T> chargeInformation, T chimneyInconsistencyRatio, T cosmogenicLikelihood)
+  :Event<T>(triggerTime, visibleEnergy, identifier),positionInformation(std::move(positionInformation)),innerVetoInformation(std::move(innerVetoInformation)),chargeInformation(std::move(chargeInformation)),chimneyInconsistencyRatio(chimneyInconsistencyRatio),cosmogenicLikelihood(cosmogenicLikelihood){
     
   }
   
@@ -96,6 +98,13 @@ namespace CosmogenicHunter{
   T Single<T>::getChimneyInconsistencyRatio() const{
     
     return chimneyInconsistencyRatio;
+    
+  }
+  
+  template <class T>
+  T Single<T>::getCosmogenicLikelihood() const{
+    
+    return cosmogenicLikelihood;
     
   }
   
@@ -160,7 +169,9 @@ namespace CosmogenicHunter{
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Charge"<<":\n";
     chargeInformation.print(output, outputOffset + 3);
     output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Chimney Pulse"<<":\n"
-    <<std::setw(outputOffset + 3)<<std::left<<""<<"Inconsistency: "<<chimneyInconsistencyRatio;
+    <<std::setw(outputOffset + 3)<<std::left<<""<<"Inconsistency: "<<chimneyInconsistencyRatio
+    <<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Cosmogenic"<<":\n"
+    <<std::setw(outputOffset + 3)<<std::left<<""<<"Likelihood: "<<cosmogenicLikelihood;
 
   }
   
