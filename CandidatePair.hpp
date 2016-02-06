@@ -28,6 +28,7 @@ namespace CosmogenicHunter{
     bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
     bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
+    void print(std::ostream& output, unsigned outputOffset) const;
     
   };
   
@@ -122,14 +123,22 @@ namespace CosmogenicHunter{
 
   }
 
+  template <class T>
+  void CandidatePair<T>::print(std::ostream& output, unsigned outputOffset) const{
+    
+    unsigned firstColumnWidth = 7;
+    output<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Prompt"<<": \n";
+    prompt.print(output, outputOffset + 3);
+    output<<"\n"<<std::setw(outputOffset)<<std::left<<""<<std::setw(firstColumnWidth)<<std::left<<"Delayed"<<": \n";
+    delayed.print(output, outputOffset + 3);
+    
+  }
+  
   
   template <class T>
   std::ostream& operator<<(std::ostream& output, const CandidatePair<T>& candidatePair){
     
-    output<<std::setw(6)<<std::left<<"Prompt"<<": \n";
-    candidatePair.getPrompt().print(output, 13, 3);
-    output<<"\n"<<std::setw(6)<<std::left<<"Delayed"<<": \n";
-    candidatePair.getDelayed().print(output, 13, 3);
+    candidatePair.print(output, 0);
     return output;
     
   }
