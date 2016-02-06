@@ -120,8 +120,8 @@ namespace CosmogenicHunter{
     
     unsigned firstColumnWidth = 14;
     output<<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Charge"<<": "<<std::setw(7)<<std::left<<charge<<"\n"
-      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Hit PMTs"<<": "<<std::setw(4)<<std::left<<numberOfHitPMTs<<"\n"
-      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Time to ID"<<": "<<std::setw(4)<<std::left<<timeToInnerDetectorStart<<"\n"
+      <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Hit PMTs"<<": "<<std::setw(4)<<std::left<<numberOfHitPMTs;
+    if(charge > 0) output<<"\n"<<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Time to ID"<<": "<<std::setw(4)<<std::left<<timeToInnerDetectorStart<<"\n"
       <<std::setw(outputOffset)<<std::left<<" "<<std::setw(firstColumnWidth)<<std::left<<"Distance to ID"<<": "<<std::setw(5)<<std::left<<distanceToInnerDetector;
 
   }
