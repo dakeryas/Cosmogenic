@@ -28,6 +28,7 @@ namespace CosmogenicHunter{
     bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
     bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
+    bool isCosmogenic(T cosmogenicLikelihoodThreshold) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -121,6 +122,13 @@ namespace CosmogenicHunter{
   
     return prompt.isBufferMuon(bufferMuonCutParameters);
 
+  }
+  
+  template <class T>
+  bool CandidatePair<T>::isCosmogenic(T cosmogenicLikelihoodThreshold) const{
+
+    return prompt.getCosmogenicLikelihood() > cosmogenicLikelihoodThreshold;
+  
   }
 
   template <class T>
