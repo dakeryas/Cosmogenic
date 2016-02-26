@@ -172,7 +172,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool MuonDefinition<T>::tag(const Entry<T>& entry) const{
 
-    return entry.innerVetoData.charge[2] > IVChargeThreshold && ( entry.energy > energyThreshold || entry.innerDetectorData.charge[2] > IDChargeThreshold);
+    return entry.innerVetoData.charge[0] > IVChargeThreshold && ( entry.energy > energyThreshold || entry.innerDetectorData.charge[0] > IDChargeThreshold);
 
   }
   
