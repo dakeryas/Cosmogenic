@@ -179,7 +179,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool MuonDefinition<T>::tag(const Muon<T>& muon) const{
 
-    return muon.getVetoCharge() > IVChargeThreshold && (getVisibleEnergy(muon) > energyThreshold || muon.getDetectorCharge() > IDChargeThreshold);
+    return muon.getVetoCharge() > IVChargeThreshold && (muon.template Event<T>::getVisibleEnergy() > energyThreshold || muon.getDetectorCharge() > IDChargeThreshold);
 
   }
   
@@ -210,7 +210,7 @@ namespace CosmogenicHunter{
     auto formerPrecision = output.precision();
     output<<std::fixed;
     
-    output<<"\n"<<std::setw(26)<<std::left<<"IV Charge threshold"<<": "<<std::setw(8)<<std::right<<std::setprecision(0)<<muonDefinition.getIVChargeThreshold()<<"\n"
+    output<<std::setw(26)<<std::left<<"IV Charge threshold"<<": "<<std::setw(8)<<std::right<<std::setprecision(0)<<muonDefinition.getIVChargeThreshold()<<"\n"
       <<std::setw(26)<<std::left<<"Energy threshold"<<": "<<std::setw(8)<<std::right<<muonDefinition.getEnergyThreshold()<<"\n"
       <<std::setw(26)<<std::left<<"Energy to ID charge factor"<<": "<<std::setw(8)<<std::right<<muonDefinition.getEnergyToIDChargeFactor()<<"\n"
       <<std::setw(26)<<std::left<<"ID charge threshold"<<": "<<std::setw(8)<<std::right<<muonDefinition.getIDChargeThreshold()<<"\n"
