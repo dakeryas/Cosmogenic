@@ -50,6 +50,7 @@ namespace CosmogenicHunter{
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
     bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
+    bool isCosmogenic(T cosmogenicLikelihoodThreshold) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
   };
@@ -154,6 +155,13 @@ namespace CosmogenicHunter{
   bool Single<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
 
     return bufferMuonCutParameters.tag(*this);
+  
+  }
+  
+  template <class T>
+  bool Single<T>::isCosmogenic(T cosmogenicLikelihoodThreshold) const{
+
+    return cosmogenicLikelihood > cosmogenicLikelihoodThreshold;
   
   }
   

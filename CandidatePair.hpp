@@ -127,7 +127,7 @@ namespace CosmogenicHunter{
   template <class T>
   bool CandidatePair<T>::isCosmogenic(T cosmogenicLikelihoodThreshold) const{
 
-    return prompt.getCosmogenicLikelihood() > cosmogenicLikelihoodThreshold;
+    return prompt.isCosmogenic(cosmogenicLikelihoodThreshold);
   
   }
 
