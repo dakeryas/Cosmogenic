@@ -25,7 +25,7 @@ namespace CosmogenicHunter{
     Window(double startTime, double lenght);
     double getStartTime() const;
     double getEndTime() const;
-    double getLenght() const;
+    double getLength() const;
     unsigned getNumberOfEvents() const;
     typename std::deque<T>::const_iterator begin() const;
     typename std::deque<T>::const_iterator end() const;
@@ -93,7 +93,7 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  double Window<T>::getLenght() const{
+  double Window<T>::getLength() const{
     
     return lenght;
 
