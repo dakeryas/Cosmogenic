@@ -71,7 +71,7 @@ namespace CosmogenicHunter{
   template <class T>
   T Bounds<T>::getWidth() const{
     
-  return upEdge - lowEdge;
+    return upEdge - lowEdge;
 
   }
   
