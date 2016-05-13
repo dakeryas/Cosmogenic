@@ -1,42 +1,53 @@
 #ifndef COSMOGENIC_INNER_VETO_THRESHOLD_H
 #define COSMOGENIC_INNER_VETO_THRESHOLD_H
 
+#include "Cosmogenic/Veto.hpp"
 #include "Cosmogenic/Bounds.hpp"
 #include "Cosmogenic/Point.hpp"
 
 namespace CosmogenicHunter{
   
   template <class T>
-  class InnerVetoThreshold{
+  class InnerVetoThreshold : public Veto<T>{
     
     T maxCharge;
     int maxNumberOfHitPMTs;
     Bounds<T> timeCorrelationBounds;//time correlation to the inner detector start time
-    T maxDistanceToInnerDetector;
+    T minDistanceToInnerDetector;
+    
+    bool veto(const InnerVetoInformation<T>& innerVetoInformation) const;
     
   public:
-    InnerVetoThreshold() = default;
-    InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T maxDistanceToInnerDetector);
+    InnerVetoThreshold();
+    InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector);
     T getMaxCharge() const;
     int getMaxNumberOfHitPMTs() const;
     const Bounds<T>& getTimeCorrelationBounds() const;
-    T getMaxDistanceToInnerDetector() const;
+    T getMinDistanceToInnerDetector() const;
     void setMaxCharge(T maxCharge);
     void setMaxNumberOfHitPMTs(int maxNumberOfHitPMTs);
     void setTimeCorrelationBounds(Bounds<T> timeCorrelationBounds);
-    void setMaxDistanceToInnerDetector(T maxDistanceToInnerDetector);
-    bool tag(const InnerVetoInformation<T>& innerVetoInformation) const;
-    bool tag(const Single<T>& single) const;
+    void setMinDistanceToInnerDetector(T minDistanceToInnerDetector);
+    bool veto(const Single<T>& single) const;
+    bool veto(const CandidatePair<T>& candidatePair) const;
+    std::unique_ptr<Veto<T>> clone() const;
+    void print(std::ostream& output) const;
     
   };
   
   template <class T>
-  InnerVetoThreshold<T>::InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T maxDistanceToInnerDetector)
-  :maxCharge(maxCharge),maxNumberOfHitPMTs(maxNumberOfHitPMTs),timeCorrelationBounds(std::move(timeCorrelationBounds)),maxDistanceToInnerDetector(maxDistanceToInnerDetector){
+  InnerVetoThreshold<T>::InnerVetoThreshold()
+  :InnerVetoThreshold<T>(std::numeric_limits<T>::max(), std::numeric_limits<int>::max(), Bounds<T>(0, 0), 0){
     
-    if(maxCharge < 0 || maxNumberOfHitPMTs < 0 ||  maxNumberOfHitPMTs > std::numeric_limits<unsigned short>::max() || maxDistanceToInnerDetector < 0){
+  }
+  
+  template <class T>
+  InnerVetoThreshold<T>::InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector)
+  :Veto<T>("InnerVeto"),maxCharge(maxCharge),maxNumberOfHitPMTs(maxNumberOfHitPMTs),timeCorrelationBounds(std::move(timeCorrelationBounds)),minDistanceToInnerDetector(minDistanceToInnerDetector){
+    
+    if(maxCharge < 0 || maxNumberOfHitPMTs < 0 ||  maxNumberOfHitPMTs > std::numeric_limits<unsigned short>::max() || minDistanceToInnerDetector < 0){
       
-      auto errorMessage = std::to_string(maxCharge)+"DUQ, "+std::to_string(maxNumberOfHitPMTs)+", and "+std::to_string(maxDistanceToInnerDetector)+"mm are invalid inner veto charge, number of hit PMTs, and distance to inner detector.";
+      auto errorMessage = std::to_string(maxCharge)+"DUQ, "+std::to_string(maxNumberOfHitPMTs)+", and "+std::to_string(minDistanceToInnerDetector)+"mm are invalid inner veto charge, number of hit PMTs, and distance to inner detector.";
       throw std::invalid_argument(errorMessage);
       
     }
@@ -65,9 +76,9 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  T InnerVetoThreshold<T>::getMaxDistanceToInnerDetector() const{
+  T InnerVetoThreshold<T>::getMinDistanceToInnerDetector() const{
     
-    return maxDistanceToInnerDetector;
+    return minDistanceToInnerDetector;
 
   }
   
@@ -95,35 +106,58 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::setMaxDistanceToInnerDetector(T maxDistanceToInnerDetector){
+  void InnerVetoThreshold<T>::setMinDistanceToInnerDetector(T minDistanceToInnerDetector){
     
-    if(maxDistanceToInnerDetector >= 0) this->maxDistanceToInnerDetector = maxDistanceToInnerDetector;
+    if(minDistanceToInnerDetector >= 0) this->minDistanceToInnerDetector = minDistanceToInnerDetector;
     else throw std::invalid_argument(std::to_string(maxCharge)+"mm is not a valid distance to inner detector.");
 
   }
   
   template <class T>
-  bool InnerVetoThreshold<T>::tag(const InnerVetoInformation<T>& innerVetoInformation) const{
+  bool InnerVetoThreshold<T>::veto(const InnerVetoInformation<T>& innerVetoInformation) const{
 
-    return innerVetoInformation.getCharge() > maxCharge && innerVetoInformation.getNumberOfHitPMTs() >= maxNumberOfHitPMTs && timeCorrelationBounds.contains(innerVetoInformation.getTimeToInnerDetectorStart()) && innerVetoInformation.getDistanceToInnerDetector() < maxDistanceToInnerDetector;
+    return innerVetoInformation.getCharge() > maxCharge && innerVetoInformation.getNumberOfHitPMTs() >= maxNumberOfHitPMTs && timeCorrelationBounds.contains(innerVetoInformation.getTimeToInnerDetectorStart()) && innerVetoInformation.getDistanceToInnerDetector() < minDistanceToInnerDetector;
 
   }
   
   template <class T>
-  bool InnerVetoThreshold<T>::tag(const Single<T>& single) const{
+  bool InnerVetoThreshold<T>::veto(const Single<T>& single) const{
     
-    return tag(single.getInnerVetoInformation());
+    return veto(single.getInnerVetoInformation());
     
+  }
+  
+  template <class T>
+  bool InnerVetoThreshold<T>::veto(const CandidatePair<T>& candidatePair) const{
+
+    return veto(candidatePair.getPrompt());
+
+  }
+  
+  template <class T>
+  std::unique_ptr<Veto<T>> InnerVetoThreshold<T>::clone() const{
+
+    return std::make_unique<InnerVetoThreshold<T>>(*this);
+
+  }
+  
+  template <class T>
+  void InnerVetoThreshold<T>::print(std::ostream& output) const{
+    
+    int labelColumnWidth = 12;
+    int dataColumnWidth = 6;
+    
+    output<<std::setw(labelColumnWidth)<<std::left<<"Max charge"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxCharge<<"\n"
+      <<std::setw(labelColumnWidth)<<std::left<<"Max Hit PMTs"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxNumberOfHitPMTs<<"\n"
+      <<std::setw(labelColumnWidth)<<std::left<<"Time bounds"<<": "<<timeCorrelationBounds<<"\n"
+      <<std::setw(labelColumnWidth)<<std::left<<"Min distance"<<": "<<minDistanceToInnerDetector;
+
   }
   
   template <class T>
   std::ostream& operator<<(std::ostream& output, const InnerVetoThreshold<T>& innerVetoThreshold){
-
-    output<<std::setw(12)<<std::left<<"Max charge"<<": "<<std::setw(6)<<std::right<<innerVetoThreshold.getMaxCharge()<<"\n"
-      <<std::setw(12)<<std::left<<"Max Hit PMTs"<<": "<<std::setw(6)<<std::right<<innerVetoThreshold.getMaxNumberOfHitPMTs()<<"\n"
-      <<std::setw(12)<<std::left<<"Time bounds"<<": "<<innerVetoThreshold.getTimeCorrelationBounds()<<"\n"
-      <<std::setw(12)<<std::left<<"Max distance"<<": "<<innerVetoThreshold.getMaxDistanceToInnerDetector();
-      
+    
+    innerVetoThreshold.print(output);
     return output;
 
   }

@@ -133,28 +133,28 @@ namespace CosmogenicHunter{
   template <class T>
   bool Single<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
     
-    return lightNoiseCutParameters.tag(chargeInformation);
+    return lightNoiseCutParameters.veto(*this);
     
   }
   
   template <class T>
   bool Single<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
     
-    return innerVetoThreshold.tag(innerVetoInformation);
+    return innerVetoThreshold.veto(*this);
     
   }
   
   template <class T>
   bool Single<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
 
-    return reconstructionCutParameters.tag(*this);
+    return reconstructionCutParameters.veto(*this);
   
   }
   
   template <class T>
   bool Single<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
 
-    return bufferMuonCutParameters.tag(*this);
+    return bufferMuonCutParameters.veto(*this);
   
   }
   

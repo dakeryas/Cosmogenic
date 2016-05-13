@@ -4,30 +4,40 @@
 #include <iomanip>
 #include <stdexcept>
 #include <regex>
+#include "Cosmogenic/Veto.hpp"
 
 namespace CosmogenicHunter{
   
   template <class T>
-  class ReconstructionCutParameters{
+  class ReconstructionCutParameters : public Veto<T>{
     
     T minEnergy;//minimum Single's energy that can be kept as a valid Single (happens for inconsistency == 0) (otherwise they are tagged/rejected as they have minEnergy  > energy)
     T characteristicInconsistencyInverse;
     
   public:
-    ReconstructionCutParameters() = default;
+    ReconstructionCutParameters();
     ReconstructionCutParameters(T minEnergy, T characteristicInconsistency);
     T getMinEnergy() const;
     T getCharacteristicInconsistency() const;
     void setMinEnergy(T minEnergy);
     void setCharacteristicInconsistency(T characteristicInconsistency);
     void setParameters(T minEnergy, T characteristicInconsistency);
-    bool tag(const Single<T>& single) const;
+    bool veto(const Single<T>& single) const;
+    bool veto(const CandidatePair<T>& candidatePair) const;
+    std::unique_ptr<Veto<T>> clone() const;
+    void print(std::ostream& output) const;
     
   };
   
   template <class T>
+  ReconstructionCutParameters<T>::ReconstructionCutParameters()
+  :ReconstructionCutParameters<T>(std::numeric_limits<T>::max(), std::numeric_limits<T>::max()){
+    
+  }
+  
+  template <class T>
   ReconstructionCutParameters<T>::ReconstructionCutParameters(T minEnergy, T characteristicInconsistency)
-  :minEnergy(minEnergy),characteristicInconsistencyInverse(1/characteristicInconsistency){
+  :Veto<T>("ReconstructionVeto"),minEnergy(minEnergy),characteristicInconsistencyInverse(1/characteristicInconsistency){
     
     if(minEnergy < 0 || characteristicInconsistency <= 0 ){
       
@@ -77,21 +87,46 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool ReconstructionCutParameters<T>::tag(const Single<T>& single) const{
+  bool ReconstructionCutParameters<T>::veto(const Single<T>& single) const{
 
     return minEnergy * std::exp(characteristicInconsistencyInverse * single.getPositionInformation().getInconsistency()) > single.getVisibleEnergy(); // the position inconsistency is too high for such a small energy
 
   }
   
   template <class T>
+  bool ReconstructionCutParameters<T>::veto(const CandidatePair<T>& candidatePair) const{
+
+    return veto(candidatePair.getDelayed());
+
+  }
+  
+  template <class T>
+  std::unique_ptr<Veto<T>> ReconstructionCutParameters<T>::clone() const{
+
+    return std::make_unique<ReconstructionCutParameters<T>>(*this);
+
+  }
+  
+  template <class T>
+  void ReconstructionCutParameters<T>::print(std::ostream& output) const{
+    
+    int labelColumnWidth = 28;
+    int dataColumnWidth = 6;
+    
+    output<<std::setw(labelColumnWidth)<<std::left<<"Min energy"<<": "<<std::setw(dataColumnWidth)<<std::right<<minEnergy<<"\n"
+      <<std::setw(labelColumnWidth)<<std::left<<"Characteristic inconsistency"<<": "<<std::setw(dataColumnWidth)<<std::right<<getCharacteristicInconsistency();
+
+  }
+
+  
+  template <class T>
   std::ostream& operator<<(std::ostream& output, const ReconstructionCutParameters<T>& reconstructionCutParameters){
 
-    output<<std::setw(28)<<std::left<<"Min energy"<<": "<<std::setw(6)<<std::right<<reconstructionCutParameters.getMinEnergy()<<"\n"
-      <<std::setw(28)<<std::left<<"Characteristic inconsistency"<<": "<<std::setw(6)<<std::right<<reconstructionCutParameters.getCharacteristicInconsistency();
-      
+    reconstructionCutParameters.print(output);  
     return output;
 
   }
+  
   
   template <class T>
   std::istream& operator>>(std::istream& input, ReconstructionCutParameters<T>& reconstructionCutParameters){

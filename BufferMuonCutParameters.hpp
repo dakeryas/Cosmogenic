@@ -4,30 +4,40 @@
 #include <iomanip>
 #include <stdexcept>
 #include <regex>
+#include "Cosmogenic/Veto.hpp"
 
 namespace CosmogenicHunter{
   
   template <class T>
-  class BufferMuonCutParameters{
+  class BufferMuonCutParameters : public Veto<T>{
     
     T constant;
     T exponent;
     
   public:
-    BufferMuonCutParameters() = default;
+    BufferMuonCutParameters();
     BufferMuonCutParameters(T constant, T exponent);
     T getConstant() const;
     T getExponent() const;
     void setConstant(T constant);
     void setExponent(T exponent);
     void setParameters(T constant, T exponent);
-    bool tag(const Single<T>& single) const;
+    bool veto(const Single<T>& single) const;
+    bool veto(const CandidatePair<T>& candidatePair) const;
+    std::unique_ptr<Veto<T>> clone() const;
+    void print(std::ostream& output) const;
     
   };
   
   template <class T>
+  BufferMuonCutParameters<T>::BufferMuonCutParameters()
+  :BufferMuonCutParameters<T>(std::numeric_limits<T>::max(), 0){
+    
+  }
+  
+  template <class T>
   BufferMuonCutParameters<T>::BufferMuonCutParameters(T constant, T exponent)
-  :constant(constant),exponent(exponent){
+  :Veto<T>("BufferMuonVeto"),constant(constant),exponent(exponent){
     
     if(constant < 0 || exponent < 0 ){
       
@@ -77,18 +87,42 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool BufferMuonCutParameters<T>::tag(const Single<T>& single) const{
+  bool BufferMuonCutParameters<T>::veto(const Single<T>& single) const{
 
     return single.getChargeInformation().getRatio() > constant / std::pow(single.getVisibleEnergy(), exponent); // the charge ratio is too high for such a small energy
 
   }
   
   template <class T>
+  bool BufferMuonCutParameters<T>::veto(const CandidatePair<T>& candidatePair) const{
+
+    return veto(candidatePair.getPrompt());
+
+  }
+  
+  template <class T>
+  std::unique_ptr<Veto<T>> BufferMuonCutParameters<T>::clone() const{
+
+    return std::make_unique<BufferMuonCutParameters<T>>(*this);
+
+  }
+  
+  template <class T>
+  void BufferMuonCutParameters<T>::print(std::ostream& output) const{
+    
+    int labelColumnWidth = 8;
+    int dataColumnWidth = 6;
+    
+    output<<std::setw(labelColumnWidth)<<std::left<<"Constant"<<": "<<std::setw(dataColumnWidth)<<std::right<<constant<<"\n"
+      <<std::setw(labelColumnWidth)<<std::left<<"Exponent"<<": "<<std::setw(dataColumnWidth)<<std::right<<exponent;
+
+  }
+
+  
+  template <class T>
   std::ostream& operator<<(std::ostream& output, const BufferMuonCutParameters<T>& bufferMuonCutParameters){
 
-    output<<std::setw(8)<<std::left<<"Constant"<<": "<<std::setw(6)<<std::right<<bufferMuonCutParameters.getConstant()<<"\n"
-      <<std::setw(8)<<std::left<<"Exponent"<<": "<<std::setw(6)<<std::right<<bufferMuonCutParameters.getExponent();
-      
+    bufferMuonCutParameters.print(output);  
     return output;
 
   }
