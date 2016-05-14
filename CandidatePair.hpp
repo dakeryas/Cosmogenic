@@ -25,7 +25,7 @@ namespace CosmogenicHunter{
     bool isSpaceCorrelated(T maxDistance) const;
     bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
     bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
-    bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
+    bool isStoppingMuon(const ChimneyVeto<T>& chimneyVeto) const;
     bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
     bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
     bool isCosmogenic(T cosmogenicLikelihoodThreshold) const;
@@ -92,35 +92,35 @@ namespace CosmogenicHunter{
   template <class T>
   bool CandidatePair<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
   
-    return prompt.isLightNoise(lightNoiseCutParameters) || delayed.isLightNoise(lightNoiseCutParameters);
+    return lightNoiseCutParameters.veto(*this);
 
   }
 
   template <class T>
   bool CandidatePair<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
 
-    return delayed.isPoorlyReconstructed(reconstructionCutParameters);
+    return reconstructionCutParameters.veto(*this);
   
   }
   
   template <class T>
-  bool CandidatePair<T>::isStoppingMuon(T minChimneyInconsistencyRatio) const{
-
-    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() < minChimneyInconsistencyRatio;
+  bool CandidatePair<T>::isStoppingMuon(const ChimneyVeto<T>& chimneyVeto) const{
+    
+    return chimneyVeto.veto(*this);
   
   }
 
   template <class T>
   bool CandidatePair<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
   
-    return prompt.isVetoed(innerVetoThreshold);
+    return innerVetoThreshold.veto(*this);
 
   }
   
   template <class T>
   bool CandidatePair<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
   
-    return prompt.isBufferMuon(bufferMuonCutParameters);
+    return bufferMuonCutParameters.veto(*this);
 
   }
   

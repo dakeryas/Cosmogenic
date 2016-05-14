@@ -24,6 +24,9 @@ namespace CosmogenicHunter{
   class BufferMuonCutParameters;
   
   template <class T>
+  class ChimneyVeto;
+  
+  template <class T>
   class Single : public Event<T>{
     
     PositionInformation<T> positionInformation;//RecoBAMA reconstructed positon and functional value
