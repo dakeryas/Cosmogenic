@@ -8,6 +8,9 @@
 namespace CosmogenicHunter{
   
   template <class T>
+  class InnerVetoInformation;
+  
+  template <class T>
   class InnerVeto : public Veto<T>{
     
     T maxCharge;

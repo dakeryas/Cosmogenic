@@ -6,6 +6,12 @@
 
 namespace CosmogenicHunter{
   
+  template <class T>
+  class Single;
+  
+  template <class T>
+  class CandidatePair;
+  
   template <class T>//to veto CandidatePair<T>'s with the accuracy of type T
   class Veto{
     
