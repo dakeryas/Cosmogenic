@@ -37,7 +37,7 @@ namespace CosmogenicHunter{
   
   template <class T>
   InnerVetoThreshold<T>::InnerVetoThreshold()
-  :InnerVetoThreshold<T>(std::numeric_limits<T>::max(), std::numeric_limits<int>::max(), Bounds<T>(0, 0), 0){
+  :InnerVetoThreshold<T>(std::numeric_limits<T>::max(), std::numeric_limits<unsigned short>::max(), Bounds<T>(0, 0), 0){
     
   }
   

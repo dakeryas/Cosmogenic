@@ -41,7 +41,7 @@ namespace CosmogenicHunter{
     
     if(constant < 0 || exponent < 0 ){
       
-      auto errorMessage = std::to_string(constant)+" MeV and "+std::to_string(exponent)+" are invalid buffer muon cut parameters.";
+      auto errorMessage = std::to_string(constant)+" MeV and "+std::to_string(exponent)+" are invalid buffer muon veto parameters.";
       throw std::invalid_argument(errorMessage);
       
     }
@@ -134,7 +134,7 @@ namespace CosmogenicHunter{
     input >> token;
     
     std::string number("[+-]?(?:\\d*\\.)?\\d+(?:[eE][-+]?[0-9]+)?");//decimal number with possible sign and exponent
-    std::regex regex("(^"+number+")[:,]("+number+"$)");//start with a number :, seprator and end with another number
+    std::regex regex("^("+number+")[:,]("+number+")$");//start with a number :, seprator and end with another number
     std::smatch regexMatches;
     if(std::regex_search(token, regexMatches, regex)) bufferMuonCutParameters.setParameters(std::stod(regexMatches[1]), std::stod(regexMatches[2]));
     else throw std::invalid_argument(token+" cannot be parsed to build buffer muon cut parameters.");

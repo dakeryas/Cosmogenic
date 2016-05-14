@@ -135,7 +135,7 @@ namespace CosmogenicHunter{
     input >> token;
     
     std::string number("[+-]?(?:\\d*\\.)?\\d+(?:[eE][-+]?[0-9]+)?");//decimal number with possible sign and exponent
-    std::regex regex("(^"+number+")[:,]("+number+"$)");//start with a number :, seprator and end with another number
+    std::regex regex("^("+number+")[:,]("+number+")$");//start with a number :, seprator and end with another number
     std::smatch regexMatches;
     if(std::regex_search(token, regexMatches, regex)) reconstructionCutParameters.setParameters(std::stod(regexMatches[1]), std::stod(regexMatches[2]));
     else throw std::invalid_argument(token+" cannot be parsed to build reconstruction cut parameters.");
