@@ -113,7 +113,8 @@ namespace CosmogenicHunter{
     int labelColumnWidth = 28;
     int dataColumnWidth = 6;
     
-    output<<std::setw(labelColumnWidth)<<std::left<<"Min energy"<<": "<<std::setw(dataColumnWidth)<<std::right<<minEnergy<<"\n"
+    Veto<T>::print(output);
+    output<<"\n"<<std::setw(labelColumnWidth)<<std::left<<"Min energy"<<": "<<std::setw(dataColumnWidth)<<std::right<<minEnergy<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Characteristic inconsistency"<<": "<<std::setw(dataColumnWidth)<<std::right<<getCharacteristicInconsistency();
 
   }

@@ -78,7 +78,8 @@ namespace CosmogenicHunter{
   template <class T>
   void ChimneyVeto<T>::print(std::ostream& output) const{
     
-    output<<std::setw(28)<<std::left<<"Min chimney inconsistency"<<": "<<std::setw(6)<<std::right<<minChimneyInconsistencyRatio;
+    Veto<T>::print(output);
+    output<<"\n"<<std::setw(25)<<std::left<<"Min chimney inconsistency"<<": "<<std::setw(4)<<std::right<<minChimneyInconsistencyRatio;
 
   }
 

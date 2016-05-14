@@ -45,6 +45,20 @@ namespace CosmogenicHunter{
     
   }
   
+  template <class T>
+  void Veto<T>::print(std::ostream& output) const{
+    
+    output<<"Veto: "<<name;
+    
+  }
+  
+  template <class T>
+  std::ostream& operator<<(std::ostream& output, const Veto<T>& veto){
+    
+    veto.print(output);
+    return output;
+    
+  }
   
 }
 

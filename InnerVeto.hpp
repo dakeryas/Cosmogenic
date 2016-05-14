@@ -150,7 +150,8 @@ namespace CosmogenicHunter{
     int labelColumnWidth = 12;
     int dataColumnWidth = 6;
     
-    output<<std::setw(labelColumnWidth)<<std::left<<"Max charge"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxCharge<<"\n"
+    Veto<T>::print(output);
+    output<<"\n"<<std::setw(labelColumnWidth)<<std::left<<"Max charge"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxCharge<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Max Hit PMTs"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxNumberOfHitPMTs<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Time bounds"<<": "<<timeCorrelationBounds<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Min distance"<<": "<<minDistanceToInnerDetector;

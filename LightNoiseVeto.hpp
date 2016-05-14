@@ -179,7 +179,8 @@ namespace CosmogenicHunter{
     int labelColumnWidth = 13;
     int dataColumnWidth = 6;
     
-    output<<std::setw(labelColumnWidth)<<std::left<<"Max RMS"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxRMS<<"\n"
+    Veto<T>::print(output);
+    output<<"\n"<<std::setw(labelColumnWidth)<<std::left<<"Max RMS"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxRMS<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Slope RMS"<<": "<<std::setw(dataColumnWidth)<<std::right<<slopeRMS<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Max Diff"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxDifference<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Max Ratio"<<": "<<std::setw(dataColumnWidth)<<std::right<<maxRatio<<"\n"

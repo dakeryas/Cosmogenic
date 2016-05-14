@@ -113,7 +113,8 @@ namespace CosmogenicHunter{
     int labelColumnWidth = 8;
     int dataColumnWidth = 6;
     
-    output<<std::setw(labelColumnWidth)<<std::left<<"Constant"<<": "<<std::setw(dataColumnWidth)<<std::right<<constant<<"\n"
+    Veto<T>::print(output);
+    output<<"\n"<<std::setw(labelColumnWidth)<<std::left<<"Constant"<<": "<<std::setw(dataColumnWidth)<<std::right<<constant<<"\n"
       <<std::setw(labelColumnWidth)<<std::left<<"Exponent"<<": "<<std::setw(dataColumnWidth)<<std::right<<exponent;
 
   }
