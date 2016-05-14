@@ -8,7 +8,7 @@
 namespace CosmogenicHunter{
   
   template <class T>
-  class InnerVetoThreshold : public Veto<T>{
+  class InnerVeto : public Veto<T>{
     
     T maxCharge;
     int maxNumberOfHitPMTs;
@@ -18,8 +18,8 @@ namespace CosmogenicHunter{
     bool veto(const InnerVetoInformation<T>& innerVetoInformation) const;
     
   public:
-    InnerVetoThreshold();
-    InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector);
+    InnerVeto();
+    InnerVeto(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector);
     T getMaxCharge() const;
     int getMaxNumberOfHitPMTs() const;
     const Bounds<T>& getTimeCorrelationBounds() const;
@@ -36,13 +36,13 @@ namespace CosmogenicHunter{
   };
   
   template <class T>
-  InnerVetoThreshold<T>::InnerVetoThreshold()
-  :InnerVetoThreshold<T>(std::numeric_limits<T>::max(), std::numeric_limits<unsigned short>::max(), Bounds<T>(0, 0), 0){
+  InnerVeto<T>::InnerVeto()
+  :InnerVeto<T>(std::numeric_limits<T>::max(), std::numeric_limits<unsigned short>::max(), Bounds<T>(0, 0), 0){
     
   }
   
   template <class T>
-  InnerVetoThreshold<T>::InnerVetoThreshold(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector)
+  InnerVeto<T>::InnerVeto(T maxCharge, int maxNumberOfHitPMTs, Bounds<T> timeCorrelationBounds, T minDistanceToInnerDetector)
   :Veto<T>("InnerVeto"),maxCharge(maxCharge),maxNumberOfHitPMTs(maxNumberOfHitPMTs),timeCorrelationBounds(std::move(timeCorrelationBounds)),minDistanceToInnerDetector(minDistanceToInnerDetector){
     
     if(maxCharge < 0 || maxNumberOfHitPMTs < 0 ||  maxNumberOfHitPMTs > std::numeric_limits<unsigned short>::max() || minDistanceToInnerDetector < 0){
@@ -55,35 +55,35 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  T InnerVetoThreshold<T>::getMaxCharge() const{
+  T InnerVeto<T>::getMaxCharge() const{
     
     return maxCharge;
 
   }
 
   template <class T>
-  int InnerVetoThreshold<T>::getMaxNumberOfHitPMTs() const{
+  int InnerVeto<T>::getMaxNumberOfHitPMTs() const{
     
     return maxNumberOfHitPMTs;
 
   }
   
   template <class T>
-  const Bounds<T>& InnerVetoThreshold<T>::getTimeCorrelationBounds() const{
+  const Bounds<T>& InnerVeto<T>::getTimeCorrelationBounds() const{
     
     return timeCorrelationBounds;
 
   }
 
   template <class T>
-  T InnerVetoThreshold<T>::getMinDistanceToInnerDetector() const{
+  T InnerVeto<T>::getMinDistanceToInnerDetector() const{
     
     return minDistanceToInnerDetector;
 
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::setMaxCharge(T maxCharge){
+  void InnerVeto<T>::setMaxCharge(T maxCharge){
     
     if(maxCharge >= 0) this->maxCharge = maxCharge;
     else throw std::invalid_argument(std::to_string(maxCharge)+"DUQ is not a valid inner veto charge.");
@@ -91,7 +91,7 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::setMaxNumberOfHitPMTs(int maxNumberOfHitPMTs){
+  void InnerVeto<T>::setMaxNumberOfHitPMTs(int maxNumberOfHitPMTs){
     
     if(maxNumberOfHitPMTs >= 0 && maxNumberOfHitPMTs <= std::numeric_limits<unsigned short>::max()) this->maxNumberOfHitPMTs = maxNumberOfHitPMTs;
     else throw std::invalid_argument(std::to_string(maxNumberOfHitPMTs)+" is not a valid number of hit PMTs.");
@@ -99,14 +99,14 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::setTimeCorrelationBounds(Bounds<T> timeCorrelationBounds){
+  void InnerVeto<T>::setTimeCorrelationBounds(Bounds<T> timeCorrelationBounds){
     
     this->timeCorrelationBounds = timeCorrelationBounds;
 
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::setMinDistanceToInnerDetector(T minDistanceToInnerDetector){
+  void InnerVeto<T>::setMinDistanceToInnerDetector(T minDistanceToInnerDetector){
     
     if(minDistanceToInnerDetector >= 0) this->minDistanceToInnerDetector = minDistanceToInnerDetector;
     else throw std::invalid_argument(std::to_string(maxCharge)+"mm is not a valid distance to inner detector.");
@@ -114,35 +114,35 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool InnerVetoThreshold<T>::veto(const InnerVetoInformation<T>& innerVetoInformation) const{
+  bool InnerVeto<T>::veto(const InnerVetoInformation<T>& innerVetoInformation) const{
 
     return innerVetoInformation.getCharge() > maxCharge && innerVetoInformation.getNumberOfHitPMTs() >= maxNumberOfHitPMTs && timeCorrelationBounds.contains(innerVetoInformation.getTimeToInnerDetectorStart()) && innerVetoInformation.getDistanceToInnerDetector() < minDistanceToInnerDetector;
 
   }
   
   template <class T>
-  bool InnerVetoThreshold<T>::veto(const Single<T>& single) const{
+  bool InnerVeto<T>::veto(const Single<T>& single) const{
     
     return veto(single.getInnerVetoInformation());
     
   }
   
   template <class T>
-  bool InnerVetoThreshold<T>::veto(const CandidatePair<T>& candidatePair) const{
+  bool InnerVeto<T>::veto(const CandidatePair<T>& candidatePair) const{
 
     return veto(candidatePair.getPrompt());
 
   }
   
   template <class T>
-  std::unique_ptr<Veto<T>> InnerVetoThreshold<T>::clone() const{
+  std::unique_ptr<Veto<T>> InnerVeto<T>::clone() const{
 
-    return std::make_unique<InnerVetoThreshold<T>>(*this);
+    return std::make_unique<InnerVeto<T>>(*this);
 
   }
   
   template <class T>
-  void InnerVetoThreshold<T>::print(std::ostream& output) const{
+  void InnerVeto<T>::print(std::ostream& output) const{
     
     int labelColumnWidth = 12;
     int dataColumnWidth = 6;
@@ -155,15 +155,15 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  std::ostream& operator<<(std::ostream& output, const InnerVetoThreshold<T>& innerVetoThreshold){
+  std::ostream& operator<<(std::ostream& output, const InnerVeto<T>& innerVeto){
     
-    innerVetoThreshold.print(output);
+    innerVeto.print(output);
     return output;
 
   }
   
   template <class T>
-  std::istream& operator>>(std::istream& input, InnerVetoThreshold<T>& innerVetoThreshold){
+  std::istream& operator>>(std::istream& input, InnerVeto<T>& innerVeto){
   
     std::string token;
     input >> token;
@@ -176,7 +176,7 @@ namespace CosmogenicHunter{
     std::regex regex(regexString);
     std::smatch regexMatches;
     if(std::regex_search(token, regexMatches, regex))
-      innerVetoThreshold = std::move(InnerVetoThreshold<T>(std::stod(regexMatches[1]), std::stod(regexMatches[2]), Bounds<T>(std::stod(regexMatches[3]), std::stod(regexMatches[4])), std::stod(regexMatches[5])));
+      innerVeto = std::move(InnerVeto<T>(std::stod(regexMatches[1]), std::stod(regexMatches[2]), Bounds<T>(std::stod(regexMatches[3]), std::stod(regexMatches[4])), std::stod(regexMatches[5])));
     else throw std::invalid_argument(token+" cannot be parsed to build inner veto threshold.");
     
     return input;

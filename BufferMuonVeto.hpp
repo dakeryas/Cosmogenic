@@ -1,5 +1,5 @@
-#ifndef COSMOGENIC_BUFFER_MUON_CUT_PARAMETERS_H
-#define COSMOGENIC_BUFFER_MUON_CUT_PARAMETERS_H
+#ifndef COSMOGENIC_BUFFER_MUON_VETO_H
+#define COSMOGENIC_BUFFER_MUON_VETO_H
 
 #include <iomanip>
 #include <stdexcept>
@@ -9,14 +9,14 @@
 namespace CosmogenicHunter{
   
   template <class T>
-  class BufferMuonCutParameters : public Veto<T>{
+  class BufferMuonVeto : public Veto<T>{
     
     T constant;
     T exponent;
     
   public:
-    BufferMuonCutParameters();
-    BufferMuonCutParameters(T constant, T exponent);
+    BufferMuonVeto();
+    BufferMuonVeto(T constant, T exponent);
     T getConstant() const;
     T getExponent() const;
     void setConstant(T constant);
@@ -30,13 +30,13 @@ namespace CosmogenicHunter{
   };
   
   template <class T>
-  BufferMuonCutParameters<T>::BufferMuonCutParameters()
-  :BufferMuonCutParameters<T>(std::numeric_limits<T>::max(), 0){
+  BufferMuonVeto<T>::BufferMuonVeto()
+  :BufferMuonVeto<T>(std::numeric_limits<T>::max(), 0){
     
   }
   
   template <class T>
-  BufferMuonCutParameters<T>::BufferMuonCutParameters(T constant, T exponent)
+  BufferMuonVeto<T>::BufferMuonVeto(T constant, T exponent)
   :Veto<T>("BufferMuonVeto"),constant(constant),exponent(exponent){
     
     if(constant < 0 || exponent < 0 ){
@@ -49,21 +49,21 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  T BufferMuonCutParameters<T>::getConstant() const{
+  T BufferMuonVeto<T>::getConstant() const{
     
     return constant;
 
   }
 
   template <class T>
-  T BufferMuonCutParameters<T>::getExponent() const{
+  T BufferMuonVeto<T>::getExponent() const{
     
     return exponent;
 
   }
   
   template <class T>
-  void BufferMuonCutParameters<T>::setConstant(T constant){
+  void BufferMuonVeto<T>::setConstant(T constant){
     
     if(constant >= 0) this->constant = constant;
     else throw std::invalid_argument(std::to_string(constant)+"MeV^"+std::to_string(exponent)+" is not a valid constant for the buffer muon cut.");
@@ -71,7 +71,7 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void BufferMuonCutParameters<T>::setExponent(T exponent){
+  void BufferMuonVeto<T>::setExponent(T exponent){
     
     if(exponent >= 0) this->exponent = exponent;
     else throw std::invalid_argument(std::to_string(exponent)+" is not a valid exponent for the buffer muon cut.");
@@ -79,7 +79,7 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  void BufferMuonCutParameters<T>::setParameters(T constant, T exponent){
+  void BufferMuonVeto<T>::setParameters(T constant, T exponent){
 
     setConstant(constant);
     setExponent(exponent);
@@ -87,28 +87,28 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool BufferMuonCutParameters<T>::veto(const Single<T>& single) const{
+  bool BufferMuonVeto<T>::veto(const Single<T>& single) const{
 
     return single.getChargeInformation().getRatio() > constant / std::pow(single.getVisibleEnergy(), exponent); // the charge ratio is too high for such a small energy
 
   }
   
   template <class T>
-  bool BufferMuonCutParameters<T>::veto(const CandidatePair<T>& candidatePair) const{
+  bool BufferMuonVeto<T>::veto(const CandidatePair<T>& candidatePair) const{
 
     return veto(candidatePair.getPrompt());
 
   }
   
   template <class T>
-  std::unique_ptr<Veto<T>> BufferMuonCutParameters<T>::clone() const{
+  std::unique_ptr<Veto<T>> BufferMuonVeto<T>::clone() const{
 
-    return std::make_unique<BufferMuonCutParameters<T>>(*this);
+    return std::make_unique<BufferMuonVeto<T>>(*this);
 
   }
   
   template <class T>
-  void BufferMuonCutParameters<T>::print(std::ostream& output) const{
+  void BufferMuonVeto<T>::print(std::ostream& output) const{
     
     int labelColumnWidth = 8;
     int dataColumnWidth = 6;
@@ -120,15 +120,15 @@ namespace CosmogenicHunter{
 
   
   template <class T>
-  std::ostream& operator<<(std::ostream& output, const BufferMuonCutParameters<T>& bufferMuonCutParameters){
+  std::ostream& operator<<(std::ostream& output, const BufferMuonVeto<T>& bufferMuonVeto){
 
-    bufferMuonCutParameters.print(output);  
+    bufferMuonVeto.print(output);  
     return output;
 
   }
   
   template <class T>
-  std::istream& operator>>(std::istream& input, BufferMuonCutParameters<T>& bufferMuonCutParameters){
+  std::istream& operator>>(std::istream& input, BufferMuonVeto<T>& bufferMuonVeto){
   
     std::string token;
     input >> token;
@@ -136,7 +136,7 @@ namespace CosmogenicHunter{
     std::string number("[+-]?(?:\\d*\\.)?\\d+(?:[eE][-+]?[0-9]+)?");//decimal number with possible sign and exponent
     std::regex regex("^("+number+")[:,]("+number+")$");//start with a number :, seprator and end with another number
     std::smatch regexMatches;
-    if(std::regex_search(token, regexMatches, regex)) bufferMuonCutParameters.setParameters(std::stod(regexMatches[1]), std::stod(regexMatches[2]));
+    if(std::regex_search(token, regexMatches, regex)) bufferMuonVeto.setParameters(std::stod(regexMatches[1]), std::stod(regexMatches[2]));
     else throw std::invalid_argument(token+" cannot be parsed to build buffer muon cut parameters.");
     
     return input;

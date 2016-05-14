@@ -12,16 +12,16 @@ namespace CosmogenicHunter{
   class Muon;
   
   template <class T>
-  class LightNoiseCutParameters;
+  class LightNoiseVeto;
   
   template <class T>
-  class InnerVetoThreshold;
+  class InnerVeto;
   
   template <class T>
-  class ReconstructionCutParameters;
+  class ReconstructionVeto;
   
   template <class T>
-  class BufferMuonCutParameters;
+  class BufferMuonVeto;
   
   template <class T>
   class ChimneyVeto;
@@ -49,10 +49,10 @@ namespace CosmogenicHunter{
     T getDistanceTo(const Muon<T>& muon) const;//shortest distance to Muon's track
     T getSpaceCorrelation(const Single<T>& other) const;
     bool isSpaceCorrelated(const Single<T>& other, T maxDistance) const;
-    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
-    bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
-    bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
-    bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
+    bool isLightNoise(const LightNoiseVeto<T>& lightNoiseVeto) const;
+    bool isVetoed(const InnerVeto<T>& innerVetoThreshold) const;
+    bool isPoorlyReconstructed(const ReconstructionVeto<T>& reconstructionVeto) const;
+    bool isBufferMuon(const BufferMuonVeto<T>& bufferMuonVeto) const;
     bool isCosmogenic(T cosmogenicLikelihoodThreshold) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
@@ -134,30 +134,30 @@ namespace CosmogenicHunter{
   }
   
   template <class T>
-  bool Single<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
+  bool Single<T>::isLightNoise(const LightNoiseVeto<T>& lightNoiseVeto) const{
     
-    return lightNoiseCutParameters.veto(*this);
+    return lightNoiseVeto.veto(*this);
     
   }
   
   template <class T>
-  bool Single<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
+  bool Single<T>::isVetoed(const InnerVeto<T>& innerVetoThreshold) const{
     
     return innerVetoThreshold.veto(*this);
     
   }
   
   template <class T>
-  bool Single<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
+  bool Single<T>::isPoorlyReconstructed(const ReconstructionVeto<T>& reconstructionVeto) const{
 
-    return reconstructionCutParameters.veto(*this);
+    return reconstructionVeto.veto(*this);
   
   }
   
   template <class T>
-  bool Single<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
+  bool Single<T>::isBufferMuon(const BufferMuonVeto<T>& bufferMuonVeto) const{
 
-    return bufferMuonCutParameters.veto(*this);
+    return bufferMuonVeto.veto(*this);
   
   }
   
