@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <stdexcept>
 #include <regex>
+#include "boost/io/ios_state.hpp"
 
 namespace CosmogenicHunter{
 
@@ -70,7 +71,7 @@ namespace CosmogenicHunter{
   template <class T>
   T Bounds<T>::getWidth() const{
     
-  return upEdge - lowEdge;
+    return upEdge - lowEdge;
 
   }
   
@@ -112,12 +113,8 @@ namespace CosmogenicHunter{
   template <class T>
   std::ostream& operator<<(std::ostream& output, const Bounds<T>& bounds){
     
-    auto formerPrecision = output.precision();
-    output<<std::fixed;
-    
-    output<<"["<<std::setw(4)<<std::internal<<std::setprecision(1)<<bounds.getLowEdge()<<", "<<std::setw(4)<<std::internal<<bounds.getUpEdge()<<"]";
-    output<<std::setprecision(formerPrecision);
-    
+    boost::io::ios_base_all_saver streamStateSaver(output);//save precision and flags (restored on destruction)
+    output<<std::fixed<<"["<<std::setw(4)<<std::internal<<std::setprecision(1)<<bounds.getLowEdge()<<", "<<std::setw(4)<<std::internal<<bounds.getUpEdge()<<"]";
     return output;
     
   }

@@ -23,11 +23,11 @@ namespace CosmogenicHunter{
     T getSpaceCorrelation() const;
     bool isTimeCorrelated(const Bounds<double>& timeBounds) const;
     bool isSpaceCorrelated(T maxDistance) const;
-    bool isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const;
-    bool isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const;
-    bool isStoppingMuon(T minChimneyInconsistencyRatio) const;
-    bool isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const;
-    bool isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const;
+    bool isLightNoise(const LightNoiseVeto<T>& lightNoiseVeto) const;
+    bool isPoorlyReconstructed(const ReconstructionVeto<T>& reconstructionVeto) const;
+    bool isStoppingMuon(const ChimneyVeto<T>& chimneyVeto) const;
+    bool isBufferMuon(const BufferMuonVeto<T>& bufferMuonVeto) const;
+    bool isVetoed(const InnerVeto<T>& innerVeto) const;
     bool isCosmogenic(T cosmogenicLikelihoodThreshold) const;
     void print(std::ostream& output, unsigned outputOffset) const;
     
@@ -90,44 +90,44 @@ namespace CosmogenicHunter{
   }
 
   template <class T>
-  bool CandidatePair<T>::isLightNoise(const LightNoiseCutParameters<T>& lightNoiseCutParameters) const{
+  bool CandidatePair<T>::isLightNoise(const LightNoiseVeto<T>& lightNoiseVeto) const{
   
-    return prompt.isLightNoise(lightNoiseCutParameters) || delayed.isLightNoise(lightNoiseCutParameters);
+    return lightNoiseVeto.veto(*this);
 
   }
 
   template <class T>
-  bool CandidatePair<T>::isPoorlyReconstructed(const ReconstructionCutParameters<T>& reconstructionCutParameters) const{
+  bool CandidatePair<T>::isPoorlyReconstructed(const ReconstructionVeto<T>& reconstructionVeto) const{
 
-    return delayed.isPoorlyReconstructed(reconstructionCutParameters);
+    return reconstructionVeto.veto(*this);
   
   }
   
   template <class T>
-  bool CandidatePair<T>::isStoppingMuon(T minChimneyInconsistencyRatio) const{
-
-    return prompt.getChimneyInconsistencyRatio() + delayed.getChimneyInconsistencyRatio() < minChimneyInconsistencyRatio;
+  bool CandidatePair<T>::isStoppingMuon(const ChimneyVeto<T>& chimneyVeto) const{
+    
+    return chimneyVeto.veto(*this);
   
   }
 
   template <class T>
-  bool CandidatePair<T>::isVetoed(const InnerVetoThreshold<T>& innerVetoThreshold) const{
+  bool CandidatePair<T>::isVetoed(const InnerVeto<T>& innerVeto) const{
   
-    return prompt.isVetoed(innerVetoThreshold);
+    return innerVeto.veto(*this);
 
   }
   
   template <class T>
-  bool CandidatePair<T>::isBufferMuon(const BufferMuonCutParameters<T>& bufferMuonCutParameters) const{
+  bool CandidatePair<T>::isBufferMuon(const BufferMuonVeto<T>& bufferMuonVeto) const{
   
-    return prompt.isBufferMuon(bufferMuonCutParameters);
+    return bufferMuonVeto.veto(*this);
 
   }
   
   template <class T>
   bool CandidatePair<T>::isCosmogenic(T cosmogenicLikelihoodThreshold) const{
 
-    return prompt.getCosmogenicLikelihood() > cosmogenicLikelihoodThreshold;
+    return prompt.isCosmogenic(cosmogenicLikelihoodThreshold);
   
   }
 
