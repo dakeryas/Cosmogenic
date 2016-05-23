@@ -21,6 +21,8 @@ namespace CosmogenicHunter{
     CandidateTree(CandidatePair<T> candidatePair, Window<Shower<Muon<K>, Single<T>>> muonShowers);
     const CandidatePair<T>& getCandidatePair() const;
     const Window<Shower<Muon<K>, Single<T>>>& getMuonShowers() const;
+    double getTimeCorrelationToLastMuon() const;
+    bool isAfterMuon(double afterMuonTimeVeto) const;
     
   };
   
@@ -51,6 +53,21 @@ namespace CosmogenicHunter{
     return muonShowers;
     
   }
+  
+  template <class T, class K>
+  double CandidateTree<T,K>::getTimeCorrelationToLastMuon() const{
+    
+    return CosmogenicHunter::getTimeCorrelation(candidatePair.getPrompt(), muonShowers.back().getInitiator());
+    
+  }
+  
+  template <class T, class K>
+  bool CandidateTree<T,K>::isAfterMuon(double afterMuonTimeVeto) const{
+    
+    return getTimeCorrelationToLastMuon() < afterMuonTimeVeto;
+    
+  }
+  
   
   template <class T, class K>
   std::ostream& operator<<(std::ostream& output, const CandidateTree<T,K>& candidatePairTree){
