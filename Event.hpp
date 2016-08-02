@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include "cereal/archives/binary.hpp"
+#include "cereal/types/polymorphic.hpp"
 #include "Cosmogenic/Bounds.hpp"
 
 namespace CosmogenicHunter{
