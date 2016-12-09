@@ -31,6 +31,10 @@ namespace CosmogenicHunter{
     typename std::deque<T>::const_iterator end() const;
     typename std::deque<T>::iterator begin();
     typename std::deque<T>::iterator end();
+    const T& front() const;
+    T& front();
+    const T& back() const;
+    T& back();
     void setStartTime(double startTime);
     void setLenght(double lenght);
     void setEndTime(double endTime);
@@ -132,6 +136,34 @@ namespace CosmogenicHunter{
 
     return events.end();
     
+  }
+  
+  template <class T>
+  const T& Window<T>::front() const{
+    
+    return events.front();
+
+  }
+  
+  template <class T>
+  T& Window<T>::front(){
+    
+    return events.front();
+
+  }
+  
+  template <class T>
+  const T& Window<T>::back() const{
+    
+    return events.back();
+
+  }
+  
+  template <class T>
+  T& Window<T>::back(){
+    
+    return events.back();
+
   }
   
   template <class T>
